@@ -9,38 +9,23 @@ pp = pprint.PrettyPrinter(width=50)
 
 class TestP(unittest.TestCase):
 
-    def test_gen(self):
-        strings = ['HSHINCHANA','HNOHARAANA']
-        
-        hash1 = cchild.build_hash(strings[0])
-        hash2 = cchild.build_hash(strings[1])
-        
-        pp.pprint(hash1)
-        pp.pprint(hash2)
-        
-        # get the set of common characters
-        
-        set1 = set(hash1.keys())
-        set2 = set(hash2.keys())
-        
-        inter = set1 & set2
-        
-        pp.pprint(inter)
-        
-        for c in inter:
-            print c, hash1[c], hash2[c]
-        
-        common_chars = [c for c in inter]
+    def test_lcs(self):
+        self.assertEqual(3, cchild.lcs("SHINCHAN", "NOHARAAA"))
 
-        g1 = cchild.gen(common_chars, hash1)
-        pp.pprint(g1)
+        self.assertEqual(0, cchild.lcs("AA", "BB"))
+        self.assertEqual(0, cchild.lcs("AAAA", ""))
+        self.assertEqual(3, cchild.lcs("YESTERDAY", "YXXDXXY"))
 
-# test for 'children' with repeating letters
-# e.g. 'YESTERDAY', 'YXXXDXXXY'
-# e.g. 'YESTERDAY', 'YXXXYXXXD'  should show no matches.
+        self.assertEqual(2, cchild.lcs("YESTERDAY", "YXXYXXD"))
+        self.assertEqual(2, cchild.lcs("HARRY", "SALLY"))
 
-# other test cases
-# HANA HANNA - HANA
-# AA BB - no matches
-# AXBXCXDXE  OEODOCOBOAO  - no matches
-# ABCDE AAAAABBBBBCCCCDDDDDDEEEE - ABCDE
+    def test_lcs_matrix(self):
+        self.assertEqual(3, cchild.lcs_matrix("SHINCHAN", "NOHARAAA"))
+
+        self.assertEqual(0, cchild.lcs_matrix("AA", "BB"))
+        self.assertEqual(0, cchild.lcs_matrix("AAAA", ""))
+        self.assertEqual(3, cchild.lcs_matrix("YESTERDAY", "YXXDXXY"))
+
+        self.assertEqual(2, cchild.lcs_matrix("YESTERDAY", "YXXYXXD"))
+        self.assertEqual(2, cchild.lcs_matrix("HARRY", "SALLY"))
+
