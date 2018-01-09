@@ -57,7 +57,7 @@ class TestSteady(unittest.TestCase):
 
     def test_algorithm_part2(self):
         sequence = 'GTACCCTTGCGT'
-        self.assertEqual(2, st.find_smallest_subrange(sequence))
+        self.assertEqual(2, st.steadyGene(sequence))
 
     def test_missing_ntide(self):
         sequence = 'GGAGTAATAATG'  # no C
@@ -72,7 +72,7 @@ class TestSteady(unittest.TestCase):
         print sequence
         pp.pprint(d)
         print st.find_best_interval(sequence)
-        self.assertEqual(9, st.find_smallest_subrange(sequence))
+        self.assertEqual(9, st.steadyGene(sequence))
 
     def test_random(self):
         multiple = 3
@@ -107,7 +107,35 @@ class TestSteady(unittest.TestCase):
         pp.pprint(d)
         print st.find_best_interval(sequence)
 
+    def test_gigantic(self):
+        multiple = 125000
+        ntides = []
+        for i in xrange(4 * multiple):
+            ntides.append(random.choice(st.nucleotides))
+
+        print "built sequence, scanning it now"
+        sequence = ''.join(ntides)
+
+        d = st.occurrences(sequence)
+#        print sequence
+#        pp.pprint(d)
+        print st.find_best_interval(sequence)
+
+    def test_gigantic_one_ntide(self):
+        sequence = 'A' * 500000
+        self.assertEqual(375000, st.steadyGene(sequence))
+
+    def test_gigantic_balanced(self):
+        sequence = 'ACTG' * 125000
+        print st.find_best_interval(sequence)
+
+    def test_empty_string(self):
+        sequence = ''
+        print st.find_best_interval(sequence)
+
 # interesting test cases
 # GGAGTAATAATG  (no C)
 # GTACCCTTGCGT  answer is 2
 # n = 1
+
+# AACCAACTCAAG  algorithm gives interval as (0, 5)

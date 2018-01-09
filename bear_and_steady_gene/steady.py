@@ -55,24 +55,28 @@ def invariant_holds(odict, l, r):
     :return:
     """
 
-    k = len(odict['A']) / 4
-#    print "k = %s, l = %s, r = %s" % (k, l, r)
-    for key in odict.keys():
-        left_part = odict[key][l] - odict[key][0]
-        right_part = odict[key][-1] - odict[key][r]
-        
-        if left_part + right_part > k:
-            return False
-    return True
+    try:
+        k = len(odict['A']) / 4
+        for key in odict.keys():
+            left_part = odict[key][l] - odict[key][0]
+            right_part = odict[key][-1] - odict[key][r]
+
+            if left_part + right_part > k:
+                return False
+        return True
+    except IndexError as e:
+        print e
+        print "k = %s, l = %s, r = %s" % (k, l, r)
 
 
 def find_best_interval(sequence):
-
     l = 0
     r = 0
     odict = occurrences(sequence)
     n = len(sequence)
     best_interval = (0, n)
+    if not sequence:
+        return best_interval
 
     while True:
         if r < n:
@@ -86,6 +90,8 @@ def find_best_interval(sequence):
         # now wind l
         while invariant_holds(odict, l, r):
             l += 1
+            if l >= r:
+                return best_interval
 
         # reset l
         if not invariant_holds(odict, l, r):
@@ -101,6 +107,6 @@ def find_best_interval(sequence):
     return best_interval
 
 
-def find_smallest_subrange(sequence):
+def steadyGene(sequence):
     i = find_best_interval(sequence)
     return i[1] - i[0]
