@@ -1,0 +1,8 @@
+have to balance the numbers of nucleotides.  if there are
+to many of one, there won't be enough of another.
+
+find the largest range on the left where the nucleotides are all <= n/4
+
+then go from the right and wind back for as long as all nucleotides are <= n/4
+
+
