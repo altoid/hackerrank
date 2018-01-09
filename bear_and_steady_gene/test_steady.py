@@ -58,7 +58,54 @@ class TestSteady(unittest.TestCase):
     def test_algorithm_part2(self):
         print st.find_smallest_subrange('GTACCCTTGCGT')
 
+    def test_missing_ntide(self):
+        sequence = 'GGAGTAATAATG'  # no C
+        d = st.occurrences(sequence)
+        print sequence
+        pp.pprint(d)
+        print st.find_smallest_subrange(sequence)
+
+    def test_one_ntide(self):
+        sequence = 'A' * 12
+        d = st.occurrences(sequence)
+        print sequence
+        pp.pprint(d)
+        print st.find_smallest_subrange(sequence)
+
+    def test_random(self):
+        multiple = 3
+        ntides = []
+        for i in xrange(4 * multiple):
+            ntides.append(random.choice(st.nucleotides))
+
+        sequence = ''.join(ntides)
+
+        d = st.occurrences(sequence)
+        print sequence
+        pp.pprint(d)
+        print st.find_smallest_subrange(sequence)
+
+    def test_n_eq_1(self):
+        sequence = 'ACGG'
+        d = st.occurrences(sequence)
+        print sequence
+        pp.pprint(d)
+        print st.find_smallest_subrange(sequence)
+
+    def test_bigger(self):
+        multiple = 9
+        ntides = []
+        for i in xrange(4 * multiple):
+            ntides.append(random.choice(st.nucleotides))
+
+        sequence = ''.join(ntides)
+
+        d = st.occurrences(sequence)
+        print sequence
+        pp.pprint(d)
+        print st.find_smallest_subrange(sequence)
 
 # interesting test cases
 # GGAGTAATAATG  (no C)
 # GTACCCTTGCGT  answer is 2
+# n = 1

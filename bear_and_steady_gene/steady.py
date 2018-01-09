@@ -71,8 +71,8 @@ def find_smallest_subrange(sequence):
     l = 0
     r = 0
     odict = occurrences(sequence)
-    best_interval = ()
     n = len(sequence)
+    best_interval = (0, n)
 
     while True:
         if r < n:
@@ -91,7 +91,7 @@ def find_smallest_subrange(sequence):
         if not invariant_holds(odict, l, r):
             l -= 1
 
-        if not best_interval or r - l < best_interval[1] - best_interval[0]:
+        if r - l < best_interval[1] - best_interval[0]:
             best_interval = (l, r)
             print best_interval
 
