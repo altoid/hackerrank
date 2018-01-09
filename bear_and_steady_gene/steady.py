@@ -66,7 +66,7 @@ def invariant_holds(odict, l, r):
     return True
 
 
-def find_smallest_subrange(sequence):
+def find_best_interval(sequence):
 
     l = 0
     r = 0
@@ -93,9 +93,14 @@ def find_smallest_subrange(sequence):
 
         if r - l < best_interval[1] - best_interval[0]:
             best_interval = (l, r)
-            print best_interval
+#            print best_interval
 
         if r >= n:
             break
 
     return best_interval
+
+
+def find_smallest_subrange(sequence):
+    i = find_best_interval(sequence)
+    return i[1] - i[0]

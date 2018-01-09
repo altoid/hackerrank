@@ -56,21 +56,23 @@ class TestSteady(unittest.TestCase):
         self.assertTrue(st.invariant_holds(d, l - 1, r))
 
     def test_algorithm_part2(self):
-        print st.find_smallest_subrange('GTACCCTTGCGT')
+        sequence = 'GTACCCTTGCGT'
+        self.assertEqual(2, st.find_smallest_subrange(sequence))
 
     def test_missing_ntide(self):
         sequence = 'GGAGTAATAATG'  # no C
         d = st.occurrences(sequence)
         print sequence
         pp.pprint(d)
-        print st.find_smallest_subrange(sequence)
+        print st.find_best_interval(sequence)
 
     def test_one_ntide(self):
         sequence = 'A' * 12
         d = st.occurrences(sequence)
         print sequence
         pp.pprint(d)
-        print st.find_smallest_subrange(sequence)
+        print st.find_best_interval(sequence)
+        self.assertEqual(9, st.find_smallest_subrange(sequence))
 
     def test_random(self):
         multiple = 3
@@ -83,14 +85,14 @@ class TestSteady(unittest.TestCase):
         d = st.occurrences(sequence)
         print sequence
         pp.pprint(d)
-        print st.find_smallest_subrange(sequence)
+        print st.find_best_interval(sequence)
 
     def test_n_eq_1(self):
         sequence = 'ACGG'
         d = st.occurrences(sequence)
         print sequence
         pp.pprint(d)
-        print st.find_smallest_subrange(sequence)
+        print st.find_best_interval(sequence)
 
     def test_bigger(self):
         multiple = 9
@@ -103,7 +105,7 @@ class TestSteady(unittest.TestCase):
         d = st.occurrences(sequence)
         print sequence
         pp.pprint(d)
-        print st.find_smallest_subrange(sequence)
+        print st.find_best_interval(sequence)
 
 # interesting test cases
 # GGAGTAATAATG  (no C)
