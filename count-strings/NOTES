@@ -1,0 +1,41 @@
+https://www.hackerrank.com/challenges/count-strings/problem
+
+individual chars (a, b)
+
+concatenation ab
+
+alternation a|b
+
+repetition a*
+
+
+regex  L
+
+q:  how many strings of length L are recognized by a regex?
+
+L <= 10 ** 9
+
+(a|b)*a  12
+
+answer:  2 * 11
+
+a|(ab)*  12
+
+answer:  0
+
+a|(ab)*  11
+
+answer:  1
+
+a* b a*  50
+
+answer:  50
+
+a* b a* b  50
+
+answer:  (50 2) = 50 * 49 / 2 = 1225
+
+a(a|b)*b*  50
+
+answer:  2 ** 49
+
