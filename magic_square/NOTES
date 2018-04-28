@@ -1,0 +1,12 @@
+https://www.hackerrank.com/challenges/magic-square-forming/forum
+
+this article
+
+https://www.geeksforgeeks.org/magic-square/
+
+gives insight on how to generate magic squares for nxn where n is odd.
+apparently for any (odd) value of n, the magic number is a function of n.
+
+for n = 3, there is one magic square, discounting reflection and rotation.
+for n = 5, there are 275,305,224.  i'm guessing that the problem only cares
+about n = 3.
