@@ -7,6 +7,10 @@ def coin_change(amount, coins):
     returns the answer and the total number of recursive calls
     to coin_change.
     """
+    ncoins = len(coins)
+
+    if (amount, ncoins) in prior_solutions:
+        return prior_solutions[(amount, ncoins)], 0
 
     if not coins:
         return 0, 1
@@ -20,10 +24,16 @@ def coin_change(amount, coins):
     total1, count1 = coin_change(amount, coins[:-1])
     total2, count2 = coin_change(amount - coins[-1], coins)
 
+    prior_solutions[(amount, ncoins)] = total1 + total2
+
     return total1 + total2, count1 + count2
 
 
 def solve(amount, coins):
+    global prior_solutions
+
+    prior_solutions = {}
+
     pprint("amount = %s" % amount)
     pprint("coins = %s" % coins)
     result = coin_change(amount, coins)
@@ -36,13 +46,13 @@ if __name__ == '__main__':
     # dictionary which will map (amount, ncoins) tuples to solution
     # for that combination
 
-    prior_solutions = {}
+    solve(4, [1,2,3])  # 4, 13/8
+    solve(10, [2,3,5,6]) # 5, 33/16
+    solve(10, [2,3,5,6,19]) # 5, 34/17
+    solve(100, [1, 5, 10, 25]) # 242, 6964/105
 
-    solve(4, [1,2,3])  # 4, 13
-    solve(10, [2,3,5,6]) # 5, 33
-    solve(10, [2,3,5,6,19]) # 5, 34
-    solve(100, [1, 5, 10, 25]) # 242, 6964
+    solve(250, [41, 34, 46, 9, 37, 32, 42, 21, 7, 13, 1, 24,
+                3, 43, 2, 23, 8, 45, 19, 30, 29, 18, 35, 11])  #    15685693751
 
-#    solve(250, [41, 34, 46, 9, 37, 32, 42, 21, 7, 13, 1, 24,
-#                3, 43, 2, 23, 8, 45, 19, 30, 29, 18, 35, 11])
-#    15685693751
+    solve(219, [36, 10, 42, 7, 50, 1, 49, 24, 37, 12, 34, 13, 39, 18, 8, 29, 19, 43, 5, 44, 28, 23, 35, 26]) # 168312708
+
