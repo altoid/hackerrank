@@ -32,5 +32,17 @@ def solve(amount, coins):
 
 
 if __name__ == '__main__':
-    solve(4, [1,2,3])
-    solve(10, [2,3,5,6])
+
+    # dictionary which will map (amount, ncoins) tuples to solution
+    # for that combination
+
+    prior_solutions = {}
+
+    solve(4, [1,2,3])  # 4, 13
+    solve(10, [2,3,5,6]) # 5, 33
+    solve(10, [2,3,5,6,19]) # 5, 34
+    solve(100, [1, 5, 10, 25]) # 242, 6964
+
+#    solve(250, [41, 34, 46, 9, 37, 32, 42, 21, 7, 13, 1, 24,
+#                3, 43, 2, 23, 8, 45, 19, 30, 29, 18, 35, 11])
+#    15685693751
