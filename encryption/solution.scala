@@ -13,20 +13,29 @@ object Solution {
     // Complete the encryption function below.
     def encryption(s: String): String = {
 
+		println(s)
+		val stripped = s.filter(c => c != ' ').toString
+		println(stripped)
 
+		val l = stripped.length
+		val r = math.floor(math.sqrt(l)).toInt
+		val c = math.ceil(math.sqrt(l)).toInt
+
+		println(s"l = $l, r = $r, c = $c")
+
+		val x = (0 to l by c).map(stripped.charAt(_)).mkString
+		println(x)
+
+		"unimplemented"
     }
 
     def main(args: Array[String]) {
         val stdin = scala.io.StdIn
 
-        val printWriter = new PrintWriter(sys.env("OUTPUT_PATH"))
-
         val s = stdin.readLine
 
         val result = encryption(s)
 
-        printWriter.println(result)
-
-        printWriter.close()
+        println(result)
     }
 }
