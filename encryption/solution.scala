@@ -23,8 +23,13 @@ object Solution {
 
 		println(s"l = $l, r = $r, c = $c")
 
-		val x = (0 to l by c).map(stripped.charAt(_)).mkString
-		println(x)
+		val y = 
+		for (i <- 0 to r) yield {
+			val x = (i to l by c).filter(n => n < l).map(stripped.charAt(_)).mkString
+			x
+		}
+
+		println(y)
 
 		"unimplemented"
     }
