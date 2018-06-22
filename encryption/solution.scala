@@ -13,25 +13,21 @@ object Solution {
     // Complete the encryption function below.
     def encryption(s: String): String = {
 
-		println(s)
-		val stripped = s.filter(c => c != ' ').toString
-		println(stripped)
+        println(s)
+        val stripped = s.filter(c => c != ' ').toString
+        println(stripped)
 
-		val l = stripped.length
-		val r = math.floor(math.sqrt(l)).toInt
-		val c = math.ceil(math.sqrt(l)).toInt
+        val l = stripped.length
+        val r = math.floor(math.sqrt(l)).toInt
+        val c = math.ceil(math.sqrt(l)).toInt
 
-		println(s"l = $l, r = $r, c = $c")
+        println(s"l = $l, r = $r, c = $c")
 
-		val y = 
-		for (i <- 0 to r) yield {
-			val x = (i to l by c).filter(n => n < l).map(stripped.charAt(_)).mkString
-			x
-		}
+        val y = for (i <- 0 until c) yield {
+            (i to l by c).filter(n => n < l).map(stripped.charAt(_)).mkString
+        }
 
-		println(y)
-
-		"unimplemented"
+        y mkString " "
     }
 
     def main(args: Array[String]) {
