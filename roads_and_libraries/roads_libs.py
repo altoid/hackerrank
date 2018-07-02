@@ -45,37 +45,6 @@ class Node(object):
         return self._label
 
 
-class Edge(object):
-    def __init__(self, origin, terminus, cost):
-        self._origin = origin
-        self._terminus = terminus
-        self._cost = cost
-
-    def __str__(self):
-        return "(%s - %s - %s)" % (self._origin, self._cost, self._terminus)
-
-    def __hash__(self):
-        return hash((self.origin, self.terminus, self.cost))
-
-    def __eq__(self, other):
-        if not isinstance(other, Edge):
-            raise NotImplemented
-
-        return self.origin == other.origin and self.terminus == other.terminus and self.cost == other.cost
-
-    @property
-    def origin(self):
-        return self._origin
-
-    @property
-    def terminus(self):
-        return self._terminus
-
-    @property
-    def cost(self):
-        return self._cost
-
-
 class DGraph(object):
     '''
     directed graph.
@@ -173,38 +142,6 @@ def _next_unvisited_neighbor(g, n, visited):
     for k in adj_list:
         if k not in visited:
             return k
-
-
-def dfs(g, n):
-    # non-recursive implementation
-
-    if not g.contains(n):
-        raise GraphException("node %s not in graph" % n)
-    
-    stack = []
-    visited = set()
-    
-    stack.append(n)
-    visited.add(n)
-    result = str(n)
-    
-    # look at node on top of stack
-    # if it has an unvisited neighbor,
-    # mark it visited and put it at top of stack
-    # otherwise pull it off
-    
-    while len(stack) > 0:
-        top = stack[-1]
-        # get next unvisited neighbor
-        k = _next_unvisited_neighbor(g, top, visited)
-        if k is None:
-            stack.pop()
-        else:
-            stack.append(k)
-            visited.add(k)
-            result += str(k)
-
-    return result
 
 
 def getpartitions(g):
