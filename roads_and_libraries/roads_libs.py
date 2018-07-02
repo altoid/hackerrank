@@ -133,8 +133,7 @@ class DGraph(object):
         if not self.contains(n):
             raise GraphException("node %s not in graph" % n)
 
-        sorted_neighbors = sorted(self.adj_list[n], key=lambda n: n[0]._label)
-        for k in sorted_neighbors:
+        for k in self.adj_list[n]:
             yield k[0]
 
     def edges(self):
@@ -170,7 +169,7 @@ class UGraph(DGraph):
 
 
 def _next_unvisited_neighbor(g, n, visited):
-    adj_list = sorted([x[0] for x in g.adj_list[n]], key=lambda n: n._label)
+    adj_list = [x[0] for x in g.adj_list[n]]
     for k in adj_list:
         if k not in visited:
             return k
