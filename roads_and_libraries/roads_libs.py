@@ -138,16 +138,13 @@ class UGraph(DGraph):
 
 
 def _next_unvisited_neighbor(g, n, visited):
-    adj_list = [x[0] for x in g.adj_list[n]]
-    for k in adj_list:
-        if k not in visited:
-            return k
+    for k in g.adj_list[n]:
+        if k[0] not in visited:
+            return k[0]
 
 
 def getpartitions(g):
-    # for the given graph, return its disjoint subgraphs.  if the
-    # graph isn't partitioned, just return the the graph.  if it is,
-    # return one node from each subgraph.
+    # for the given graph, return a list giving the number of nodes in each partition.
     #
     # todo - this will only work for undirected graphs.  if the graph
     # todo - is directed, we can't traverse the subgraphs 
@@ -183,19 +180,14 @@ def getpartitions(g):
                 unvisited.remove(k)
 
         # visited now has all the nodes in the subgraph.  make a new graph out of them.
-        subgraph = UGraph()
-        for n in visited:
-            subgraph.addnode(n)
-            subgraph.adj_list[n] = list(g.adj_list[n])
-        result.append(subgraph)
+        result.append(len(visited))
 
     return result
 
 
 #####################
 
-def evaluate(subgraph, libcost, roadcost):
-    nnodes = len(subgraph)
+def evaluate(nnodes, libcost, roadcost):
     nroads = nnodes - 1
 
     # rule of thumb:
@@ -217,11 +209,8 @@ def roadsAndLibraries(ncities, libcost, roadcost, cities):
     for e in cities:
         gr.addedge(node_dict[e[0]], node_dict[e[1]], roadcost)
 
-    subgraphs = getpartitions(gr)
-    total = 0
-    for g in subgraphs:
-        cost = evaluate(g, libcost, roadcost)
-        total += cost
+    subgraph_sizes = getpartitions(gr)
+    total = sum(map(lambda x: evaluate(x, libcost, roadcost), subgraph_sizes))
     return total
 
 
