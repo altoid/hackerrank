@@ -2,6 +2,7 @@
 
 from pprint import pprint, pformat
 import collections
+import fileinput
 
 class GraphException(Exception):
     pass
@@ -208,15 +209,18 @@ def dfs(g, n):
 
 
 def getpartitions(g):
-    # for the given graph, return its disjoint subgraphs.  if the graph isn't partitioned, just return the the
-    # graph.  if it is, return one node from each subgraph.
+    # for the given graph, return its disjoint subgraphs.  if the
+    # graph isn't partitioned, just return the the graph.  if it is,
+    # return one node from each subgraph.
     #
-    # todo - this will only work for undirected graphs.  if the graph is directed, we can't traverse the subgraphs
+    # todo - this will only work for undirected graphs.  if the graph
+    # todo - is directed, we can't traverse the subgraphs 
     # todo - whose member nodes we are returning.
 
     result = []
 
-    # idea:  pick a node and do DFS on the graph.  if there are any nodes we still haven't visited, do it again.
+    # idea: pick a node and do DFS on the graph.  if there are any
+    # nodes we still haven't visited, do it again.
     unvisited = set([n for n in g.nodes()])
     while len(unvisited) > 0:
         stack = []
@@ -286,10 +290,17 @@ def roadsAndLibraries(ncities, libcost, roadcost, cities):
 
 
 if __name__ == '__main__':
-    edges = [[1, 2], [3, 1], [2, 3]]
-    total = roadsAndLibraries(3, 2, 1, edges)
-    print total
+    fi = fileinput.FileInput()
+    line = fi.readline().strip()
+    nqueries = int(line)
+    for _ in xrange(nqueries):
+        line = fi.readline().strip().split(' ')
+        ncities, nroads, libcost, roadcost = map(lambda x: int(x), line)
+        cities = []
+        for _ in xrange(nroads):
+            e = map(lambda x: int(x), fi.readline().strip().split(' '))
+            cities.append(e)
+            
+        print roadsAndLibraries(ncities, libcost, roadcost, cities)
 
-    total = roadsAndLibraries(6, 2, 5,
-                     [[1,3], [3,4], [2,4], [1,2], [2,3], [5,6]])
-    print total
+
