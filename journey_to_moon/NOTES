@@ -1,0 +1,8 @@
+construct a graph with one vertex for each astronaut.  the pairs
+connect the vertices.
+
+then get the counts of each subgraph.
+
+multiply the counts for every pair of graphs and add them all up.
+
+not every astronaut will be paired.  in that case they will be in a single subgraph consisting of one node.
