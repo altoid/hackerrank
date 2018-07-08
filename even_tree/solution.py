@@ -40,7 +40,7 @@ class Node(object):
         print repr(self)
         print id(self)
         print id(self._label)
-        
+
     @property
     def label(self):
         return self._label
@@ -50,6 +50,7 @@ class DGraph(object):
     '''
     directed graph.
     '''
+
     # implemented as a dictionary that maps nodes to lists of Nodes.
 
     def __init__(self):
@@ -92,7 +93,6 @@ class DGraph(object):
         # it is not an error if b is not in the graph.  a must be present though.
 
         if a not in self.adj_list:
-            pprint(self.adj_list)
             raise GraphException("origin %s not in graph" % a)
 
         self.adj_list[a].remove(b)
@@ -103,6 +103,7 @@ class DGraph(object):
     '''
     return the nodes in the graph, as a list
     '''
+
     def nodes(self):
         for k in self.adj_list.keys():
             yield k
@@ -127,23 +128,28 @@ class UGraph(DGraph):
         super(UGraph, self).addedge(a, b)
         super(UGraph, self).addedge(b, a)
 
+
 ##########    ##########    ##########    ##########    ##########
 
-def _next_unvisited_neighbor(g, n, visited):
-    for k in g.adj_list[n]:
-        if k[0] not in visited:
-            return k[0]
+def subtree_size(gr, node):
+    global edges_to_remove
+    if not gr.adj_list[node]:
+        # leaf
+        # print "node %s: %s" % (node, 1)
+        return 1
 
-
-
-def solve(node):
-    pass
+    sz = sum([subtree_size(gr, x) for x in gr.adj_list[node]]) + 1
+    # print "node %s:  %s" % (node, sz)
+    if sz % 2 == 0:
+        edges_to_remove += 1
+    return sz
 
 
 def remove_back_links(gr, node):
     for n in gr.adj_list[node]:
         gr.removeedge(n, node)
         remove_back_links(gr, n)
+
 
 def build_graph(nnodes, edges):
     # returns the root and the graph
@@ -172,13 +178,19 @@ if __name__ == '__main__':
     # build the graph
     root, gr = build_graph(nnodes, edges)
 
-    # remove back links
+    # want this tree to be a directed graph, remove edges to parent nodes
     remove_back_links(gr, root)
 
-    gr.dump()
+#    gr.dump()
 
-    solve(root)
+    # idea:  get the size of the subtree rooted at  each node.  if that  number is even then the link pointing to
+    # that subtree can be removed.  the only exception is for the root; if the subtree size for the root is even then
+    # there is no incoming edge to remove.
 
+    edges_to_remove = 0
 
-
+    sz = subtree_size(gr, root)
+    if sz % 2 == 0:
+        edges_to_remove -= 1
+    print edges_to_remove
 
