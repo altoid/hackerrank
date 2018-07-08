@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from pprint import pprint, pformat
-import collections
 import fileinput
+
+from pprint import pprint, pformat
+
 
 class GraphException(Exception):
     pass
@@ -221,6 +222,36 @@ def getpartitions(g):
 
 
 #####################
+def compute(partitions):
+
+    # hack, er, optimization.  discovered this:
+    # sort the partitions list.  when there are > 1 singleton nodes,
+    #
+    # 1 1 1 1 ... 1 2 3 5 6 blah
+    #
+    # we can clip off all but one 1 and compute the answer on the resulting list
+    # and then add n * (n - 1) / 2
+    # and n * sum(list without ones)
+    # where n is the number of 1s in the list.
+
+    # we don't have to sort
+
+    without_ones = filter(lambda x: x != 1, partitions)
+    lpartitions = len(partitions)
+    l_no_ones = len(without_ones)
+    n_ones = lpartitions - l_no_ones
+    total = n_ones * (n_ones - 1) / 2
+    total += n_ones * sum(without_ones)
+
+    if n_ones > 0:
+        partitions = without_ones
+        lpartitions = len(partitions)
+
+    for i in xrange(lpartitions):
+        for j in xrange(i + 1, lpartitions):
+            total += (partitions[i] * partitions[j])
+
+    return total
 
 
 def journeyToMoon(nastronauts, pairs):
@@ -236,16 +267,8 @@ def journeyToMoon(nastronauts, pairs):
         gr.addedge(anumber_to_node[p[0]], anumber_to_node[p[1]])
 
     partitions = getpartitions(gr)
-    print pformat(partitions)
 
-    total = 0
-    l = len(partitions)
-    for i in xrange(l):
-        for j in xrange(i + 1, l):
-            total += (partitions[i] * partitions[j])
-
-    result = total
-    return result
+    return compute(partitions)
 
 
 if __name__ == '__main__':
