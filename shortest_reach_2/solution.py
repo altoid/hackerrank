@@ -218,6 +218,29 @@ def shortestReach(nnodes, edges, start):
     print pformat(edges)
     print start
 
+    # there might be multiple edges between two nodes.  throw out all but the min cost edge.
+    d = {}
+    for e in edges:
+        t = (e[0], e[1]) if e[0] < e[1] else (e[1], e[0])
+        if t not in d or e[2] < d[t]:
+            d[t] = e[2]
+    pprint(d)
+
+    # construct the graph
+    # nodes are numbered from 1
+    gr = UGraph()
+    number_to_node = {}
+    for a in xrange(nnodes):
+        # node numbering is 1-based
+        if a + 1 not in number_to_node:
+            n = Node("%s" % (a + 1))
+            number_to_node[a + 1] = n
+        gr.addnode(number_to_node[a + 1])
+    for k, v in d.items():
+        gr.addedge(number_to_node[k[0]], number_to_node[k[1]], v)
+    
+    gr.dump()
+
 if __name__ == '__main__':
     fi = fileinput.FileInput()
     ncases = int(fi.readline().strip())
