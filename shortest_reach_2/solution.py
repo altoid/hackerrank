@@ -156,16 +156,15 @@ class DGraph(object):
         for e in self.edges():
             bigc[(e.origin, e.terminus)] = e.cost
         #print "bigc:  %s" % pformat(bigc)
-        bigd = {x: None for x in diff}
+        bigd = {x: -1 for x in diff}
         for x in self.adj_list[n]:
             if (n, x[0]) in bigc:
                 bigd[x[0]] = bigc[(n, x[0])]
 
-#        while len(bigs) < len(self):
         while diff:
             # find the node in diff where v (cost) is minimum
 
-            x = filter(lambda x: bigd[x] is not None, diff)
+            x = filter(lambda x: bigd[x] != -1, diff)
             x = [(i, bigd[i]) for i in x]
             #print pformat(x)
             w, mincost = min(x, key=lambda x: x[1])
@@ -177,7 +176,7 @@ class DGraph(object):
                 if (w, v) not in bigc:
                     continue
 
-                if not bigd[v]:
+                if bigd[v] == -1:
                     bigd[v] = bigd[w] + bigc[(w, v)]
                     continue
 
@@ -240,6 +239,9 @@ def shortestReach(nnodes, edges, start):
         gr.addedge(number_to_node[k[0]], number_to_node[k[1]], v)
     
     gr.dump()
+
+    gr.dijkstra(number_to_node[1])
+
 
 if __name__ == '__main__':
     fi = fileinput.FileInput()
