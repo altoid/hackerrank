@@ -231,9 +231,9 @@ class UGraph(DGraph):
 
 #################################################
 def shortestReach(nnodes, edges, start):
-    print nnodes
-    print pformat(edges)
-    print start
+    # print nnodes
+    # print pformat(edges)
+    # print start
 
     # there might be multiple edges between two nodes.  throw out all but the min cost edge.
     d = {}
@@ -241,7 +241,7 @@ def shortestReach(nnodes, edges, start):
         t = (e[0], e[1]) if e[0] < e[1] else (e[1], e[0])
         if t not in d or e[2] < d[t]:
             d[t] = e[2]
-    pprint(d)
+#    pprint(d)
 
     # construct the graph
     # nodes are numbered from 1
@@ -256,11 +256,11 @@ def shortestReach(nnodes, edges, start):
     for k, v in d.items():
         gr.addedge(number_to_node[k[0]], number_to_node[k[1]], v)
     
-    gr.dump()
+#    gr.dump()
 
     result = gr.dijkstra(number_to_node[1])
 
-    print "d: %s" % pformat(result)
+#    print "d: %s" % pformat(result)
     for n in sorted(result.keys()):
         print result[n],
     print
