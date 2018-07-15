@@ -153,13 +153,31 @@ class DGraph(object):
 
         # construct dict mapping (origin, terminus) to cost
         bigc = {}
+
+        # hack this to make it work with undirected graphs.  since the cost from node a to b is the same as from b to
+        #  a, just store one edge in bigc.  we will store the edge where origin < terminus according to node label.
+        
+        def setcost(e):
+            t = (min(e.origin, e.terminus), max(e.origin, e.terminus))
+            bigc[t] = e.cost
+
+        def getcost(n1, n2):
+            t = (min(n1, n2), max(n1, n2))
+            return bigc.get(t)
+
+        def contains(n1, n2):
+            t = (min(n1, n2), max(n1, n2))
+            return t in bigc
+
+
         for e in self.edges():
-            bigc[(e.origin, e.terminus)] = e.cost
+            setcost(e)
+
         #print "bigc:  %s" % pformat(bigc)
         bigd = {x: -1 for x in diff}
         for x in self.adj_list[n]:
-            if (n, x[0]) in bigc:
-                bigd[x[0]] = bigc[(n, x[0])]
+            if contains(n, x[0]):
+                bigd[x[0]] = getcost(n, x[0])
 
         while diff:
             # find the node in diff where v (cost) is minimum
@@ -173,14 +191,14 @@ class DGraph(object):
             bigs.add(w)
             #print "S: %s" % bigs
             for v in diff:
-                if (w, v) not in bigc:
+                if not contains(w, v):
                     continue
 
                 if bigd[v] == -1:
-                    bigd[v] = bigd[w] + bigc[(w, v)]
+                    bigd[v] = bigd[w] + getcost(w, v)
                     continue
 
-                bigd[v] = min(bigd[v], bigd[w] + bigc[(w, v)])
+                bigd[v] = min(bigd[v], bigd[w] + getcost(w, v))
 
         print "d: %s" % pformat(bigd)
 
