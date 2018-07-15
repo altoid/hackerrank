@@ -128,14 +128,6 @@ class DGraph(object):
         for k in self.adj_list.keys():
             yield k
 
-    def neighbors(self, n):
-        if not self.contains(n):
-            raise GraphException("node %s not in graph" % n)
-
-        sorted_neighbors = sorted(self.adj_list[n], key=lambda n: n[0]._label)
-        for k in sorted_neighbors:
-            yield k[0]
-
     def edges(self):
         for n in self.nodes():
             for arc in self.adj_list[n]:
