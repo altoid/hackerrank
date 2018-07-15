@@ -156,7 +156,7 @@ class DGraph(object):
 
         # hack this to make it work with undirected graphs.  since the cost from node a to b is the same as from b to
         #  a, just store one edge in bigc.  we will store the edge where origin < terminus according to node label.
-        
+
         def setcost(e):
             t = (min(e.origin, e.terminus), max(e.origin, e.terminus))
             bigc[t] = e.cost
@@ -200,7 +200,7 @@ class DGraph(object):
 
                 bigd[v] = min(bigd[v], bigd[w] + getcost(w, v))
 
-        print "d: %s" % pformat(bigd)
+        return bigd
 
 
 class UGraph(DGraph):
@@ -258,7 +258,12 @@ def shortestReach(nnodes, edges, start):
     
     gr.dump()
 
-    gr.dijkstra(number_to_node[1])
+    result = gr.dijkstra(number_to_node[1])
+
+    print "d: %s" % pformat(result)
+    for n in sorted(result.keys()):
+        print result[n],
+    print
 
 
 if __name__ == '__main__':
