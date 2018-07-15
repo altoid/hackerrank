@@ -1,0 +1,43 @@
+don't need to rebuild roads to complete a cycle, just a minimum spanning tree.
+
+
+* --- * --- * .... * --- * --- *
+
+10k + 1 libraries/cities
+10k roads
+
+clib = 100
+croad = 1
+
+rebuilding 1 lib & all roads = 100 + 10000 = 10100
+
+rule of thumb:
+if cost of lib <= cost of road, rebuild all libs and no roads
+if cost of lib > cost of road, rebuild 1 lib & all roads
+
+
+# # rebuilding all libs & no roads = 1000100
+# #
+# # doing this:
+# #
+# # o --- *     o --- *  .... o --- *
+# #
+#H# 5k pairs + 1
+#O#
+#R# 5000 * (1 + 100) + 100 = 505100
+#S#
+#E# number of roads needed to get to a library can't exceed the cost of a library.
+#S#
+#H# o --- o --- .... --- o --- *   99 roads + 1 library, 100 cities, cost = 199
+#I#
+#T# 100 of these ...   cost = 19900
+# #
+# # 1 city left.  if we just build one more road, 19901
+# # if we build one more library, 20000
+# #
+# # o -- o --- .... o --- * --- o .... --- o --- o
+# #
+# # this is 199 cities, 198 roads, cost = 100 + 198 = 298
+# # do this 10001 / 199 = 50 times, cost is 298 * 50 = 14900
+# #
+# # 10001 - 9950 = 51 cities left.  build 51 more roads.  total = 14951.
