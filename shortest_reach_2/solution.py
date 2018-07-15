@@ -184,6 +184,9 @@ class DGraph(object):
 
             x = filter(lambda x: bigd[x] != -1, diff)
             x = [(i, bigd[i]) for i in x]
+            if not x:
+                break
+
             #print pformat(x)
             w, mincost = min(x, key=lambda x: x[1])
             #print w, mincost
@@ -250,20 +253,18 @@ def shortestReach(nnodes, edges, start):
     for a in xrange(nnodes):
         # node numbering is 1-based
         if a + 1 not in number_to_node:
-            n = Node("%s" % (a + 1))
+            n = Node("%04d" % (a + 1))
             number_to_node[a + 1] = n
         gr.addnode(number_to_node[a + 1])
     for k, v in d.items():
         gr.addedge(number_to_node[k[0]], number_to_node[k[1]], v)
     
-#    gr.dump()
+    #gr.dump()
 
-    result = gr.dijkstra(number_to_node[1])
+    result = gr.dijkstra(number_to_node[start])
 
-#    print "d: %s" % pformat(result)
-    for n in sorted(result.keys()):
-        print result[n],
-    print
+    #print "d: %s" % pformat(result)
+    return map(lambda x: result[x], sorted(result.keys()))
 
 
 if __name__ == '__main__':
@@ -276,7 +277,8 @@ if __name__ == '__main__':
             edges.append(map(int, fi.readline().strip().split(' ')))
         start = int(fi.readline().strip())
 
-        shortestReach(nnodes, edges, start)
+        result = shortestReach(nnodes, edges, start)
+        print ' '.join(map(str, result))
 
 
 
