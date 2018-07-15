@@ -80,10 +80,13 @@ class DGraph(object):
     directed graph.
     '''
     # implemented as a dictionary that maps nodes to lists of
-    # tuples:  (Node, cost) which indicate the cost of the path.
+    # nodes.
 
     def __init__(self):
         self.adj_list = {}
+
+        # dictionary mapping pairs of nodes to costs.
+        self.costs = {}
 
     def __nonzero__(self):
         # returns true if the graph has > 0 nodes
@@ -96,7 +99,7 @@ class DGraph(object):
     def addnode(self, n):
         if n in self.adj_list:
             raise GraphException("node %s is already in the graph" % n)
-        self.adj_list[n] = list()
+        self.adj_list[n] = []
 
     def addnodes(self, *nodes):
         for n in nodes:
@@ -115,8 +118,8 @@ class DGraph(object):
         if b not in self.adj_list:
             raise GraphException("terminus %s not in graph" % b)
 
-        edge = (b, cost)
-        self.adj_list[a].append(edge)
+        self.adj_list[a].append(b)
+        self.costs[(a, b)] = cost
 
     def dump(self):
         pprint(self.adj_list)
@@ -128,10 +131,13 @@ class DGraph(object):
         for k in self.adj_list.keys():
             yield k
 
+    def edgecost(self, a, b):
+        return self.costs[(a, b)]
+
     def edges(self):
         for n in self.nodes():
             for arc in self.adj_list[n]:
-                yield Edge(n, arc[0], arc[1])
+                yield Edge(n, arc, self.edgecost(n, arc))
 
     def dijkstra(self, n):
         # single-source shortest pair problem
@@ -161,15 +167,14 @@ class DGraph(object):
             t = (min(n1, n2), max(n1, n2))
             return t in bigc
 
-
         for e in self.edges():
             setcost(e)
 
         #print "bigc:  %s" % pformat(bigc)
         bigd = {x: -1 for x in diff}
         for x in self.adj_list[n]:
-            if contains(n, x[0]):
-                bigd[x[0]] = getcost(n, x[0])
+            if contains(n, x):
+                bigd[x] = getcost(n, x)
 
         while diff:
             # find the node in diff where v (cost) is minimum
@@ -209,6 +214,11 @@ class UGraph(DGraph):
     def addedge(self, a, b, cost=1):
         super(UGraph, self).addedge(a, b, cost)
         super(UGraph, self).addedge(b, a, cost)
+        minnode, maxnode = min(a, b), max(a, b)
+        self.costs[(minnode, maxnode)] = cost
+
+    def edgecost(self, a, b):
+        return self.costs[(min(a, b), max(a, b))]
 
     def edges(self):
         # since this is an undirected graph, we have to be careful
@@ -219,9 +229,9 @@ class UGraph(DGraph):
         for n in self.nodes():
             for arc in self.adj_list[n]:
                 a1 = n
-                a2 = arc[0]
+                a2 = arc
                 if a1 < a2:
-                    yield Edge(a1, a2, arc[1])
+                    yield Edge(a1, a2, self.edgecost(a1, a2))
 
 
 #################################################
