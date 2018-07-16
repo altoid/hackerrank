@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from pprint import pprint, pformat
 import fileinput
+from memory_profiler import profile
+from pprint import pprint, pformat
 
 class GraphException(Exception):
     pass
@@ -134,11 +135,13 @@ class DGraph(object):
     def edgecost(self, a, b):
         return self.costs[(a, b)]
 
+    @profile
     def edges(self):
         for n in self.nodes():
             for arc in self.adj_list[n]:
                 yield Edge(n, arc, self.edgecost(n, arc))
 
+    @profile
     def dijkstra(self, n):
         # single-source shortest pair problem
         if n not in self.adj_list:
@@ -220,6 +223,7 @@ class UGraph(DGraph):
     def edgecost(self, a, b):
         return self.costs[(min(a, b), max(a, b))]
 
+    @profile
     def edges(self):
         # since this is an undirected graph, we have to be careful
         # about not putting back-and-forth edges into the result set.
@@ -235,6 +239,7 @@ class UGraph(DGraph):
 
 
 #################################################
+@profile
 def shortestReach(nnodes, edges, start):
     # print nnodes
     # print pformat(edges)
