@@ -8,43 +8,6 @@ class GraphException(Exception):
     pass
 
 
-class Node(object):
-
-    def __init__(self, label):
-        self._label = label
-
-    def __str__(self):
-        return '%s' % self._label
-
-    def __repr__(self):
-        return "Node('%s')" % (self._label)
-
-    def __eq__(self, other):
-        if not isinstance(other, Node):
-            raise NotImplemented
-
-        return self._label == other._label
-
-    def __hash__(self):
-        return hash(self._label)
-
-    def __cmp__(self, other):
-        if not isinstance(other, Node):
-            raise NotImplemented
-
-        return cmp(self._label, other._label)
-
-    def show_ids(self, tag):
-        print '=' * 11, tag, '=' * 11
-        print repr(self)
-        print id(self)
-        print id(self._label)
-        
-    @property
-    def label(self):
-        return self._label
-
-
 class Edge(object):
     def __init__(self, origin, terminus, cost):
         self._origin = origin
@@ -256,19 +219,15 @@ def shortestReach(nnodes, edges, start):
     # construct the graph
     # nodes are numbered from 1
     gr = UGraph()
-    number_to_node = {}
     for a in xrange(nnodes):
         # node numbering is 1-based
-        if a + 1 not in number_to_node:
-            n = Node("%04d" % (a + 1))
-            number_to_node[a + 1] = n
-        gr.addnode(number_to_node[a + 1])
+        gr.addnode(a + 1)
     for k, v in d.items():
-        gr.addedge(number_to_node[k[0]], number_to_node[k[1]], v)
+        gr.addedge(k[0], k[1], v)
     
     #gr.dump()
 
-    result = gr.dijkstra(number_to_node[start])
+    result = gr.dijkstra(start)
 
     #print "d: %s" % pformat(result)
     return map(lambda x: result[x], sorted(result.keys()))
