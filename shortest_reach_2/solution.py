@@ -8,37 +8,6 @@ class GraphException(Exception):
     pass
 
 
-class Edge(object):
-    def __init__(self, origin, terminus, cost):
-        self._origin = origin
-        self._terminus = terminus
-        self._cost = cost
-
-    def __str__(self):
-        return "(%s - %s - %s)" % (self._origin, self._cost, self._terminus)
-
-    def __hash__(self):
-        return hash((self.origin, self.terminus, self.cost))
-
-    def __eq__(self, other):
-        if not isinstance(other, Edge):
-            raise NotImplemented
-
-        return self.origin == other.origin and self.terminus == other.terminus and self.cost == other.cost
-
-    @property
-    def origin(self):
-        return self._origin
-
-    @property
-    def terminus(self):
-        return self._terminus
-
-    @property
-    def cost(self):
-        return self._cost
-
-
 class DGraph(object):
     '''
     directed graph.
@@ -102,7 +71,7 @@ class DGraph(object):
     def edges(self):
         for n in self.nodes():
             for arc in self.adj_list[n]:
-                yield Edge(n, arc, self.edgecost(n, arc))
+                yield (n, arc, self.edgecost(n, arc))
 
     @profile
     def dijkstra(self, n):
@@ -119,11 +88,11 @@ class DGraph(object):
         bigc = {}
 
         # hack this to make it work with undirected graphs.  since the cost from node a to b is the same as from b to
-        #  a, just store one edge in bigc.  we will store the edge where origin < terminus according to node label.
+        # a, just store one edge in bigc.  we will store the edge where origin < terminus according to node label.
 
         def setcost(e):
-            t = (min(e.origin, e.terminus), max(e.origin, e.terminus))
-            bigc[t] = e.cost
+            t = (min(e[0], e[1]), max(e[0], e[1]))
+            bigc[t] = e[2]
 
         def getcost(n1, n2):
             t = (min(n1, n2), max(n1, n2))
@@ -198,7 +167,7 @@ class UGraph(DGraph):
                 a1 = n
                 a2 = arc
                 if a1 < a2:
-                    yield Edge(a1, a2, self.edgecost(a1, a2))
+                    yield (a1, a2, self.edgecost(a1, a2))
 
 
 #################################################
@@ -211,7 +180,7 @@ def shortestReach(nnodes, edges, start):
     # there might be multiple edges between two nodes.  throw out all but the min cost edge.
     d = {}
     for e in edges:
-        t = (e[0], e[1]) if e[0] < e[1] else (e[1], e[0])
+        t = (min(e[0], e[1]), max(e[0], e[1]))
         if t not in d or e[2] < d[t]:
             d[t] = e[2]
 #    pprint(d)
