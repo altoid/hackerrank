@@ -12,18 +12,12 @@ def minimumSwaps(arr):
     # print checks
     total_swaps = 0
 
-    zeroes = filter(lambda x: x[1] == 0, enumerate(checks))
-    zeroes_itr = iter(zeroes)
-    t = None
-    try:
-        t = zeroes_itr.next()
-    except StopIteration as no_mo:
-        pass
+    nextpos = 0
 
-    while t:
+    while nextpos < len(arr):
         # print "========== orbit"
         orbit_len = -1
-        pos = t[0]
+        pos = nextpos
         while checks[pos] == 0:
             checks[pos] = 1
             orbit_len += 1
@@ -38,13 +32,8 @@ def minimumSwaps(arr):
         # print checks, "orbit_len = %s" % orbit_len
         total_swaps += orbit_len
 
-        zeroes = filter(lambda x: x[1] == 0, enumerate(checks))
-        zeroes_itr = iter(zeroes)
-        t = None
-        try:
-            t = zeroes_itr.next()
-        except StopIteration as no_mo:
-            pass
+        while nextpos < len(arr) and checks[nextpos] == 1:
+            nextpos += 1
 
     return total_swaps
 
