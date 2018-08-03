@@ -67,20 +67,19 @@ class DGraph(object):
     def edgecost(self, a, b):
         return self.costs[(a, b)]
 
-    #@profile
+    @profile
     def edges(self):
         for n in self.nodes():
             for arc in self.adj_list[n]:
                 yield (n, arc, self.edgecost(n, arc))
 
-    #@profile
+    @profile
     def dijkstra(self, n):
         # single-source shortest pair problem
         if n not in self.adj_list:
             raise GraphException("node %s not in graph" % n)
 
-        bigv = {k for k in self.adj_list.keys()}
-        diff = bigv - set([n])
+        diff = {k for k in self.adj_list.keys()} - set([n])
 
         # construct dict mapping (origin, terminus) to cost
         bigc = {}
@@ -152,7 +151,7 @@ class UGraph(DGraph):
     def edgecost(self, a, b):
         return self.costs[(min(a, b), max(a, b))]
 
-    #@profile
+    @profile
     def edges(self):
         # since this is an undirected graph, we have to be careful
         # about not putting back-and-forth edges into the result set.
@@ -168,7 +167,7 @@ class UGraph(DGraph):
 
 
 #################################################
-#@profile
+@profile
 def shortestReach(nnodes, edges, start):
     # print nnodes
     # print pformat(edges)

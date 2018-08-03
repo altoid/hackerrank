@@ -24,6 +24,13 @@ def coin_change(amount, coins):
     total1, count1 = coin_change(amount, coins[:-1])
     total2, count2 = coin_change(amount - coins[-1], coins)
 
+    # number of ways to give change without one denomination
+    # + number of ways to give change for the amount minus one denomination
+    # 
+    # ex
+    # solve(10, [2,3,5,6])
+    # make change without a 6 + give me a 6 then make change for 4
+
     prior_solutions[(amount, ncoins)] = total1 + total2
 
     return total1 + total2, count1 + count2
@@ -34,17 +41,14 @@ def solve(amount, coins):
 
     prior_solutions = {}
 
-    pprint("amount = %s" % amount)
-    pprint("coins = %s" % coins)
+    print "amount = %s" % amount
+    print "coins = %s" % coins
     result = coin_change(amount, coins)
     print "solution:  %s" % result[0]
     print "total calls to coin_change:  %s" % result[1]
 
 
 if __name__ == '__main__':
-
-    # dictionary which will map (amount, ncoins) tuples to solution
-    # for that combination
 
     solve(4, [1,2,3])  # 4, 13/8
     solve(10, [2,3,5,6]) # 5, 33/16
