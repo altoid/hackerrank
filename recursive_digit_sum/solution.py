@@ -4,7 +4,7 @@ import fileinput
 
 
 def worker(n):
-    print "worker: %s" % n
+#    print "worker: %s" % n
     if len(n) == 1:
         return n
 
@@ -16,18 +16,15 @@ def worker(n):
 
 
 def superDigit(n, k):
-    bigga = ''
-    for _ in xrange(int(k)):
-        bigga += n
+    sd = int(worker(n)) * int(k)
 
-    return worker(bigga)
+    return worker(str(sd))
 
 if __name__ == '__main__':
     fi = fileinput.FileInput()
     n, k = fi.readline().strip().split(' ')
-    print n
-    print k
 
     result = superDigit(n, k)
-    print "result = %s" % result
+    print result
+
 
