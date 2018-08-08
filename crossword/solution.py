@@ -154,23 +154,19 @@ def crosswordPuzzle(crossword, words):
         for col in xrange(BOARDSIZE):
             c = board[row][col]
             if not lastchar:
-                if c == '+':
-                    pass
-                elif c == '-':
+                if c == '-':
                     currentrun = Run(row, col, 1, ACROSS)
 
             elif lastchar == '-':
-                if c == '+':
+                if c != '-':
                     if currentrun.length > 1:
                         across_runs.append(currentrun)
                     currentrun = None
                 elif c == '-':
                     currentrun.length += 1
 
-            elif lastchar == '+':
-                if c == '+':
-                    pass
-                elif c == '-':
+            elif lastchar != '-':
+                if c == '-':
                     currentrun = Run(row, col, 1, ACROSS)
 
             lastchar = c
@@ -193,23 +189,19 @@ def crosswordPuzzle(crossword, words):
         for row in xrange(BOARDSIZE):
             c = board[row][col]
             if not lastchar:
-                if c == '+':
-                    pass
-                elif c == '-':
+                if c == '-':
                     currentrun = Run(row, col, 1, DOWN)
 
             elif lastchar == '-':
-                if c == '+':
+                if c != '-':
                     if currentrun.length > 1:
                         down_runs.append(currentrun)
                     currentrun = None
                 elif c == '-':
                     currentrun.length += 1
 
-            elif lastchar == '+':
-                if c == '+':
-                    pass
-                elif c == '-':
+            elif lastchar != '-':
+                if c == '-':
                     currentrun = Run(row, col, 1, DOWN)
 
             lastchar = c
@@ -228,10 +220,8 @@ def crosswordPuzzle(crossword, words):
     # sort the words, first by length, then lexicographically
     
     # print words
-    s = sorted(words, cmp=my_compare)
-    # print s
     # print "#" * 44
-    for x in permute(s, my_compare):
+    for x in permute(words, my_compare):
         lens = map(len, x)
         if lens == all_lengths:
             if test_solution(x, all_runs):
