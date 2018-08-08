@@ -86,12 +86,6 @@ def my_compare(a, b):
     return 1
 
 
-def print_board():
-    global board
-    for r in board:
-        print ''.join(r)
-
-
 def word_fits(word, run):
     global board
     if len(word) != len(run):
@@ -144,8 +138,6 @@ def crosswordPuzzle(crossword, words):
     board = []
     for r in crossword:
         board.append(list(r))
-
-    print_board()
 
     # scan the board: across
     across_runs = []
@@ -235,7 +227,7 @@ def crosswordPuzzle(crossword, words):
 
     # sort the words, first by length, then lexicographically
     
-    print words
+    # print words
     s = sorted(words, cmp=my_compare)
     # print s
     # print "#" * 44
@@ -243,10 +235,10 @@ def crosswordPuzzle(crossword, words):
         lens = map(len, x)
         if lens == all_lengths:
             if test_solution(x, all_runs):
-                print_board()
-                break
-            else:
-                clear_board()
+                result = map(lambda x: ''.join(x), board)
+                return result
+
+            clear_board()
 
     
 if __name__ == '__main__':
@@ -258,4 +250,7 @@ if __name__ == '__main__':
     # read the words
     words = map(lambda x: x.upper(), fi.readline().strip().split(';'))
 
-    crosswordPuzzle(crossword, words)
+    result = crosswordPuzzle(crossword, words)
+    for r in result:
+        print r
+
