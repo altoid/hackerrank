@@ -1,4 +1,4 @@
-def next_permutation(mylist):
+def next_permutation(mylist, cmp_function):
     # return the permutation that lexicographically follows
     # <mylist>, or None if there is no such permutation
     #
@@ -16,7 +16,7 @@ def next_permutation(mylist):
     current = l - 2
     following = l - 1
     while current >= 0:
-        if mylist[current] < mylist[following]:
+        if cmp_function(mylist[current], mylist[following]) < 0:
             #print "ack - current = %s, following = %s, list = %s" % (current, following, mylist)
             # find the smallest item to the right of
             # mylist[current] that is bigger
@@ -25,7 +25,8 @@ def next_permutation(mylist):
             m = mylist[k]
             mi = k
             while k < l:
-                if mylist[current] < mylist[k] < m:
+                # mylist[current] < mylist[k] < m:
+                if cmp_function(mylist[current], mylist[k]) < 0 and cmp_function(mylist[k], m) < 0:
                     m = mylist[k]
                     mi = k
                 k += 1
@@ -37,51 +38,11 @@ def next_permutation(mylist):
         current -= 1
         following -= 1
     
-def prev_permutation(mylist):
-    # return the permutation that lexicographically precedes
-    # <mylist>, or None if there is no such permutation
-    #
-    # algorithm:
-    # - scan RL to first item that is larger than
-    #   the one to its right (x)
-    # - swap it with the largest item to the right
-    #   of x that is smaller than x (y)
-    # - sort the list [x+1:] descending
-
-    l = len(mylist)
-    if l < 2:
-        return
-
-    c = l - 2
-    current = c
-    following = c + 1
-    while current >= 0:
-#        print "current = %d, following = %d" % (current, following)
-        if mylist[current] > mylist[following]:
-            # find the biggest item to the right of
-            # mylist[current] that is smaller
-            # than mylist[current]
-            k = following
-            m = mylist[k]
-            mi = k
-            while k < l:
-                if m < mylist[k] < mylist[current]:
-                    m = mylist[k]
-                    mi = k
-                k += 1
-
-            mylist_copy = list(mylist)
-            mylist_copy[current], mylist_copy[mi] = mylist_copy[mi], mylist_copy[current]
-            return mylist_copy[:following] + sorted(mylist_copy[following:], reverse=True)
-        
-        current -= 1
-        following -= 1
-    
-def permute(mylist):
-    x = sorted(mylist)
+def permute(mylist, cmp_function=cmp):
+    x = sorted(mylist, cmp_function)
 
     while x is not None:
         yield x
-        x = next_permutation(x)
+        x = next_permutation(x, cmp_function)
 
         

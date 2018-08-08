@@ -1,12 +1,21 @@
 #!/usr/bin/env python
 
 import fileinput
+import permute
 
 BOARDSIZE = 10
 
 # assume no 1-letter words
 
 # words are sorted by length, then alphabetically
+def my_compare(a, b):
+    if len(a) == len(b):
+        return cmp(a, b)
+
+    if len(a) < len(b):
+        return -1
+
+    return 1
 
 if __name__ == '__main__':
     fi = fileinput.FileInput()
@@ -17,10 +26,10 @@ if __name__ == '__main__':
     print board
 
     # read the words
-    words = fi.readline().strip().split(';')
-    print words
+    words = map(lambda x: x.upper(), fi.readline().strip().split(';'))
 
     # scan the board: across
+    across_runs = []
     for row in xrange(BOARDSIZE):
         # '' -> '-'
         # '' -> '+'
@@ -42,7 +51,7 @@ if __name__ == '__main__':
             elif lastchar == '-':
                 if c == '+':
                     if currentrun[2] > 1:
-                        print "across run:  %s" % (currentrun,)
+                        across_runs.append(currentrun)
                     currentrun = None
                 elif c == '-':
                     currentrun = (currentrun[0], currentrun[1], currentrun[2] + 1)
@@ -56,9 +65,10 @@ if __name__ == '__main__':
             lastchar = c
             
         if currentrun and currentrun[2] > 1:
-            print "across run:  %s" % (currentrun,)
+            across_runs.append(currentrun)
             
     # scan the board: down
+    down_runs = []
     for col in xrange(BOARDSIZE):
         # '' -> '-'
         # '' -> '+'
@@ -80,7 +90,7 @@ if __name__ == '__main__':
             elif lastchar == '-':
                 if c == '+':
                     if currentrun[2] > 1:
-                        print "down run:  %s" % (currentrun,)
+                        down_runs.append(currentrun)
                     currentrun = None
                 elif c == '-':
                     currentrun = (currentrun[0], currentrun[1], currentrun[2] + 1)
@@ -94,4 +104,25 @@ if __name__ == '__main__':
             lastchar = c
             
         if currentrun and currentrun[2] > 1:
-            print "down run:  %s" % (currentrun,)
+            down_runs.append(currentrun)
+
+    print "across_runs: %s" % across_runs
+    print "down_runs: %s" % down_runs
+
+    all_runs = across_runs + down_runs
+    all_lengths = map(lambda x: x[2], all_runs)
+    print "all_runs: %s" % all_runs
+    print "all_lengths: %s" % all_lengths
+
+    # sort the words, first by length, then lexicographically
+    
+    print words
+    s = sorted(words, cmp=my_compare)
+    print s
+    print "#" * 44
+    for x in permute.permute(s, my_compare):
+        lens = map(len, x)
+        if lens == all_lengths:
+            print x
+
+
