@@ -23,6 +23,10 @@ class Run(object):
     def __repr__(self):
         return str(self)
 
+    def __len__(self):
+        return self.length
+
+
 # words are sorted by length, then alphabetically
 def my_compare(a, b):
     if len(a) == len(b):
@@ -33,16 +37,66 @@ def my_compare(a, b):
 
     return 1
 
+
+def print_board():
+    for r in board:
+        print ''.join(r)
+
+
+def word_fits(word, run):
+    if len(word) != len(run):
+        return False
+
+    chars = list(word)
+    if run.dir == ACROSS:
+        for i in xrange(len(chars)):
+            cell = board[run.row][run.col + i]
+            if cell != '-' and cell != chars[i]:
+                return False
+        return True
+
+    for i in xrange(len(chars)):
+        cell = board[run.row + i][run.col]
+        if cell != '-' and cell != chars[i]:
+            return False
+    return True
+
+
+def place_word(word, run):
+    chars = list(word)
+    if run.dir == ACROSS:
+        for i in xrange(len(chars)):
+            board[run.row][run.col + i] = chars[i]
+    else:
+        for i in xrange(len(chars)):
+            board[run.row + i][run.col] = chars[i]
+
+def clear_board():
+    for r in xrange(BOARDSIZE):
+        for c in xrange(BOARDSIZE):
+            if board[r][c] != '+':
+                board[r][c] = '-'
+
+
 def test_solution(soln):
-    print soln
+    for i in xrange(len(all_runs)):
+        print all_runs[i]
+        print soln[i]
+
+        if not word_fits(soln[i], all_runs[i]):
+            return False
+
+        place_word(soln[i], all_runs[i])
+    return True
+
 
 if __name__ == '__main__':
     fi = fileinput.FileInput()
     board = []
     for _ in xrange(BOARDSIZE):
-        board.append(fi.readline().strip())
+        board.append(list(fi.readline().strip()))
 
-    print board
+    print_board()
 
     # read the words
     words = map(lambda x: x.upper(), fi.readline().strip().split(';'))
@@ -142,6 +196,10 @@ if __name__ == '__main__':
     for x in permute.permute(s, my_compare):
         lens = map(len, x)
         if lens == all_lengths:
-            test_solution(x)
+            if test_solution(x):
+                print_board()
+                break
+            else:
+                clear_board()
 
 
