@@ -87,11 +87,13 @@ def my_compare(a, b):
 
 
 def print_board():
+    global board
     for r in board:
         print ''.join(r)
 
 
 def word_fits(word, run):
+    global board
     if len(word) != len(run):
         return False
 
@@ -111,6 +113,7 @@ def word_fits(word, run):
 
 
 def place_word(word, run):
+    global board
     chars = list(word)
     if run.dir == ACROSS:
         for i in xrange(len(chars)):
@@ -120,13 +123,14 @@ def place_word(word, run):
             board[run.row + i][run.col] = chars[i]
 
 def clear_board():
+    global board
     for r in xrange(BOARDSIZE):
         for c in xrange(BOARDSIZE):
             if board[r][c] != '+':
                 board[r][c] = '-'
 
 
-def test_solution(soln):
+def test_solution(soln, all_runs):
     for i in xrange(len(all_runs)):
         if not word_fits(soln[i], all_runs[i]):
             return False
@@ -135,16 +139,13 @@ def test_solution(soln):
     return True
 
 
-if __name__ == '__main__':
-    fi = fileinput.FileInput()
+def crosswordPuzzle(crossword, words):
+    global board
     board = []
-    for _ in xrange(BOARDSIZE):
-        board.append(list(fi.readline().strip()))
+    for r in crossword:
+        board.append(list(r))
 
     print_board()
-
-    # read the words
-    words = map(lambda x: x.upper(), fi.readline().strip().split(';'))
 
     # scan the board: across
     across_runs = []
@@ -224,27 +225,37 @@ if __name__ == '__main__':
         if currentrun and currentrun.length > 1:
             down_runs.append(currentrun)
 
-    print "across_runs: %s" % across_runs
-    print "down_runs: %s" % down_runs
+    # print "across_runs: %s" % across_runs
+    # print "down_runs: %s" % down_runs
 
     all_runs = across_runs + down_runs
     all_lengths = map(lambda x: x.length, all_runs)
-    print "all_runs: %s" % all_runs
-    print "all_lengths: %s" % all_lengths
+    # print "all_runs: %s" % all_runs
+    # print "all_lengths: %s" % all_lengths
 
     # sort the words, first by length, then lexicographically
     
     print words
     s = sorted(words, cmp=my_compare)
-    print s
-    print "#" * 44
+    # print s
+    # print "#" * 44
     for x in permute(s, my_compare):
         lens = map(len, x)
         if lens == all_lengths:
-            if test_solution(x):
+            if test_solution(x, all_runs):
                 print_board()
                 break
             else:
                 clear_board()
 
+    
+if __name__ == '__main__':
+    fi = fileinput.FileInput()
+    crossword = []
+    for _ in xrange(BOARDSIZE):
+        crossword.append(fi.readline().strip())
 
+    # read the words
+    words = map(lambda x: x.upper(), fi.readline().strip().split(';'))
+
+    crosswordPuzzle(crossword, words)
