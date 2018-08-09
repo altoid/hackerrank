@@ -95,26 +95,20 @@ def word_fits(word, run):
     if run.dir == ACROSS:
         for i in xrange(len(chars)):
             cell = board[run.row][run.col + i]
-            if cell != '-' and cell != chars[i]:
+            if cell == '-':
+                board[run.row][run.col + i] = chars[i]
+            elif cell != chars[i]:
                 return False
         return True
 
     for i in xrange(len(chars)):
         cell = board[run.row + i][run.col]
-        if cell != '-' and cell != chars[i]:
+        if cell == '-':
+            board[run.row + i][run.col] = chars[i]
+        elif cell != chars[i]:
             return False
     return True
 
-
-def place_word(word, run):
-    global board
-    chars = list(word)
-    if run.dir == ACROSS:
-        for i in xrange(len(chars)):
-            board[run.row][run.col + i] = chars[i]
-    else:
-        for i in xrange(len(chars)):
-            board[run.row + i][run.col] = chars[i]
 
 def clear_board():
     global board
@@ -129,7 +123,6 @@ def test_solution(soln, all_runs):
         if not word_fits(soln[i], all_runs[i]):
             return False
 
-        place_word(soln[i], all_runs[i])
     return True
 
 
@@ -225,7 +218,7 @@ def crosswordPuzzle(crossword, words):
         lens = map(len, x)
         if lens == all_lengths:
             if test_solution(x, all_runs):
-                result = map(lambda x: ''.join(x), board)
+                result = map(lambda y: ''.join(y), board)
                 return result
 
             clear_board()
