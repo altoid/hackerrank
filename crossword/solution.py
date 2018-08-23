@@ -126,12 +126,13 @@ def test_solution(soln, all_runs):
     return True
 
 
-def crosswordPuzzle(crossword, words):
+def crosswordPuzzle(crossword, raw_words):
     global board
     board = []
     for r in crossword:
         board.append(list(r))
 
+    words = raw_words.strip().split(';')
     # scan the board: across
     across_runs = []
     for row in xrange(BOARDSIZE):
@@ -231,9 +232,9 @@ if __name__ == '__main__':
         crossword.append(fi.readline().strip())
 
     # read the words
-    words = map(lambda x: x.upper(), fi.readline().strip().split(';'))
+    raw_words = fi.readline()
 
-    result = crosswordPuzzle(crossword, words)
+    result = crosswordPuzzle(crossword, raw_words)
     for r in result:
         print r
 
