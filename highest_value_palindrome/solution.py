@@ -85,6 +85,8 @@ def highestValuePalindrome(s, n, k):
 
 
 if __name__ == '__main__':
-    s = '1110000222'
-    k = 1
-    highestValuePalindrome(s, len(s), k)
+    fi = fileinput.FileInput()
+    n, k = map(int, fi.readline().strip().split(' '))
+    s = fi.readline().strip()
+    result = highestValuePalindrome(s, n, k)
+    print result
