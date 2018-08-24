@@ -1,0 +1,20 @@
+first figure out how many digits are different in each half of the number.  if that number is greater than k,
+game over.
+
+get pairwise differences
+
+if k is smaller than the number of pairs, we can't meet the constraint ==> -1
+
+if k is equal to the number of pairs,
+then we change one digit in each pair to be the largest of the digits in the pair
+
+if k is greater than the number of pairs but less than the # of pairs * 2,
+change outermost pairs to 9s if they are not already 9s
+
+if the number of digits is odd and we can change the middle digit, make it a 9
+
+if we've changed all the pairwise mismatches to 9s, and we can still make more changes,
+change MATCHING pairs to 9s.
+
+if we can change the middle digit, change it last.
+
