@@ -29,7 +29,7 @@ def highestValuePalindrome(s, n, k):
     digits = list(s)
     diffs = pairwise_differences(digits)
     if k < len(diffs):
-        return -1
+        return str(-1)
 
     # make several passes:
     # 1 - change one digit in each pair to be the largest of the digits in the pair
