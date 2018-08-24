@@ -33,9 +33,8 @@ def highestValuePalindrome(s, n, k):
 
     # make several passes:
     # 1 - change one digit in each pair to be the largest of the digits in the pair
-    # 2 - if we can keep going, change the digits in each pair to 9s
-    # 3 - if we can keep going, change SAME digits to 9s
-    # 4 - if we can keep going, and # of digits is odd, change middle digit to 9 if we can.
+    # 2 - if we can keep going, change SAME digits to 9s
+    # 3 - if we can keep going, and # of digits is odd, change middle digit to 9 if we can.
 
     # pass 1
     for d in diffs:
@@ -45,35 +44,31 @@ def highestValuePalindrome(s, n, k):
         k -= 1
 
     # pass 2
-    for d in diffs:
-        if k == 0:
-            break
-
-        m = max(digits[d[0]], digits[d[1]])
-        if m == '9':
-            continue
-        digits[d[0]] = '9'
-        digits[d[1]] = '9'
-        k -= 1
-
-    # pass 3
-    # create bit vector telling us which pairs we can still change
+    # create bit vector telling us which pairs we can still change.
+    # 1 means the pair was already matched
+    # 0 means we changed it
     check = [1] * (len(digits) / 2)
     for d in diffs:
         check[d[0]] = 0
     for i in xrange(len(check)):
-        if k < 2:
+        if k == 0:
             break
-        if not check[i]:
-            continue
+
         if digits[i] == '9':
             continue
 
-        digits[i] = '9'
-        digits[len(digits) - 1 - i] = '9'
-        k -= 2
+        if check[i]:
+            if k < 2:
+                continue
+            digits[i] = '9'
+            digits[len(digits) - 1 - i] = '9'
+            k -= 2
+        else:
+            digits[i] = '9'
+            digits[len(digits) - 1 - i] = '9'
+            k -= 1
 
-    # pass 4
+    # pass 3
     if k > 0:
         if len(digits) % 2 == 1:
             m = len(digits) / 2
