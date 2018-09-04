@@ -4,68 +4,6 @@ import fileinput
 from pprint import pprint, pformat
 
 
-def check_swap(arr):
-    # len(arr) > 2
-    toobig = []
-    toosmall = []
-    if arr[0] > arr[1]:
-        toobig.append(0)
-    if arr[-2] > arr[-1]:
-        toosmall.append(len(arr) - 1)
-
-    for i in xrange(1, len(arr) - 1):
-        l = arr[i - 1]
-        m = arr[i]
-        r = arr[i + 1]
-        if l > r:
-            return
-        if m < l:
-            toosmall.append(i)
-            continue
-
-        if m > r:
-            toobig.append(i)
-            continue
-
-    if len(toobig) != 1:
-        return
-
-    if len(toosmall) != 1:
-        return
-
-    # see if swapping preserves order
-    left = toobig[0]
-    right = toosmall[0]
-    leftisgood = False
-    rightisgood = False
-    if left > 0:
-        l = arr[left - 1]
-        m = arr[right]
-        r = arr[left + 1]
-        if l < m < r:
-            leftisgood = True
-    else:
-        m = arr[right]
-        r = arr[left + 1]
-        if m < r:
-            leftisgood = True
-
-    if right < len(arr) - 1:
-        l = arr[right - 1]
-        m = arr[left]
-        r = arr[right + 1]
-        if l < m < r:
-            rightisgood = True
-    else:
-        l = arr[right - 1]
-        m = arr[left]
-        if m < r:
-            rightisgood = True
-
-    if leftisgood and rightisgood:
-        return "swap %s and %s" % (left, right)
-
-
 def almostSorted(arr):
     left = None
     right = None
@@ -84,8 +22,90 @@ def almostSorted(arr):
     if left is not None and right is not None:
         intervals.append(tuple([left, right]))
 
-    pprint(intervals)
-    
+    # pprint(intervals)
+
+    # we have every descending subsequence in the array.  deal with all the cases.
+    if not intervals:
+        # already sorted
+        print 'yes'
+        return
+
+    if len(intervals) > 2:
+        print 'no'
+        return
+
+    if len(intervals) == 1:
+        interval = intervals[0]
+        diff = interval[1] - interval[0]
+
+        # have to make sure the swap/reverse preserves order
+        if interval[1] < len(arr) - 1:
+            l = arr[interval[0]]
+            r = arr[interval[1] + 1]
+            if l > r:
+                print 'no'
+                return
+
+        if interval[0] > 0:
+            l = arr[interval[0] - 1]
+            r = arr[interval[1]]
+            if l > r:
+                print 'no'
+                return
+
+        print 'yes'
+        operation = "reverse" if diff > 1 else "swap"
+        print "%s %s %s" % (operation, interval[0] + 1, interval[1] + 1)
+        return
+
+    i0 = intervals[0]
+    i1 = intervals[1]
+    d0 = i0[1] - i0[0]
+    d1 = i1[1] - i1[0]
+    if d0 != 1 or d1 != 1:
+        print 'no'
+        return
+
+    # if this is truly a swap condition, then the first interval will be a bump and the second will be a dip.
+    # swap the first value pointed to by the first interval and the second
+    # value pointed to by the second interval
+
+    left_value = arr[i1[1]]
+    right_value = arr[i0[0]]
+    left_is_good = False
+    right_is_good = False
+
+    if i0[0] > 0:
+        l = arr[i0[0] - 1]
+        m = left_value
+        r = arr[i0[1]]
+        if l < m < r:
+            left_is_good = True
+    else:
+        m = left_value
+        r = arr[i0[1]]
+        if m < r:
+            left_is_good = True
+
+    if i1[1] < len(arr) - 1:
+        l = arr[i1[0]]
+        m = right_value
+        r = arr[i1[1] + 1]
+        if l < m < r:
+            right_is_good = True
+    else:
+        l = arr[i1[0]]
+        m = right_value
+        if l < m:
+            right_is_good = True
+
+    if left_is_good and right_is_good:
+        print 'yes'
+        print 'swap %s %s' % (i0[0] + 1, i1[1] + 1)
+        return
+
+    print 'no'
+
 
 if __name__ == '__main__':
     fi = fileinput.FileInput()
