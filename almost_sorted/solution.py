@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import fileinput
+from pprint import pprint, pformat
 
 
 def check_swap(arr):
@@ -68,44 +69,23 @@ def check_swap(arr):
 def almostSorted(arr):
     left = None
     right = None
-    interval = None
+    intervals = []
     for i in xrange(len(arr) - 1):
         if arr[i] > arr[i + 1]:
-            if interval:
-                print 'no'
-                return
-
             if left is None:
                 left = i
             right = i + 1
         else:
             if left is not None and right is not None:
-                interval = (left, right)
+                intervals.append(tuple([left, right]))
+                left = None
+                right = None
 
-    if left is not None and right is not None and interval is None:
-        interval = (left, right)
+    if left is not None and right is not None:
+        intervals.append(tuple([left, right]))
 
-    if not interval:
-        # no decreasing subsequences
-        print 'yes'
-        return
-
-    # check if we are sorted after swap/reverse
-    left, right = interval
-    if left > 0:
-        if arr[left - 1] > arr[right]:
-            print 'no'
-            return
-
-    if right < len(arr) - 1:
-        if arr[right + 1] < arr[left]:
-            print 'no'
-            return
-
-    print 'yes'
-    operation = 'reverse' if right - left > 1 else 'swap'
-    print '%s %s %s' % (operation, left + 1, right + 1)
-
+    pprint(intervals)
+    
 
 if __name__ == '__main__':
     fi = fileinput.FileInput()
