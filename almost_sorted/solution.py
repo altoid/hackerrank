@@ -8,22 +8,20 @@ def almostSorted(arr):
     right = None
     interval = None
     for i in xrange(len(arr) - 1):
-        if arr[i] < arr[i + 1]:
-            if left:
-                right = i
-                interval = (left, right)
-        else:
+        if arr[i] > arr[i + 1]:
             if interval:
                 print 'no'
                 return
 
             if not left:
                 left = i
+            right = i + 1
+        else:
+            if left and right:
+                interval = (left, right)
 
-    # we have at most one interval
-    if not interval:
-        print 'yes'
-        return
+    if left is not None and right is not None and interval is None:
+        interval = (left, right)
 
     # check if we are sorted after swap/reverse
     left, right = interval
