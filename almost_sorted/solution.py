@@ -17,7 +17,7 @@ def almostSorted(arr):
                 left = i
             right = i + 1
         else:
-            if left and right:
+            if left is not None and right is not None:
                 interval = (left, right)
 
     if left is not None and right is not None and interval is None:
