@@ -13,7 +13,7 @@ def almostSorted(arr):
                 print 'no'
                 return
 
-            if not left:
+            if left is None:
                 left = i
             right = i + 1
         else:
@@ -22,6 +22,11 @@ def almostSorted(arr):
 
     if left is not None and right is not None and interval is None:
         interval = (left, right)
+
+    if not interval:
+        # no decreasing subsequences
+        print 'yes'
+        return
 
     # check if we are sorted after swap/reverse
     left, right = interval
