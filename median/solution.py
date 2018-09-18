@@ -22,6 +22,17 @@ def locate_helper(arr, a, b, e):
 
 
 def locate(arr, a):
+    """
+
+    :param arr:
+    :param a:
+    :return:  the index of the smallest element in arr that is > a.  if there is nothing larger than a in arr,
+    return -1.
+    """
+
+    if a >= arr[-1]:
+        return -1
+
     return locate_helper(arr, a, 0, len(arr) - 1)
 
 
@@ -60,23 +71,24 @@ class Tests(unittest.TestCase):
         arr = [1]
         a = 1
         split = locate(arr, a)
-        self.assertEqual(0, split)
+        self.assertEqual(-1, split)
 
         a = 0
         split = locate(arr, a)
         self.assertEqual(0, split)
 
     def test2(self):
-        arr = [2, 4, 6]
+        self.assertEqual(1, locate([2, 4, 6], 2))
 
-        # print locate(arr, 1)
-        # print locate(arr, 2)
-        # print locate(arr, 3)
-        print locate(arr, 4)
+    def test3(self):
+        self.assertEqual(3, locate([2, 4, 4, 6], 4))
 
-        print locate([2,4,4,6], 4)
-        print locate([2, 4, 4, 4, 6], 4)
-        print locate([2, 4, 4, 4, 6], 7)
+        arr = [2, 4, 4, 4, 6]
+        self.assertEqual(0, locate(arr, 0))
+        self.assertEqual(1, locate(arr, 2))
+        self.assertEqual(4, locate(arr, 4))
+        self.assertEqual(0, locate(arr, 0))
+        self.assertEqual(-1, locate(arr, 7))
 
 
 if __name__ == '__main__':
