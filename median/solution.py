@@ -14,9 +14,9 @@ def locate_helper(arr, a, b, e):
     # find the index of the smallest element in arr that is > a.
 
     m = (b + e) / 2
-    if a < arr[m]: # arr[b] <= a <= arr[m - 1]
+    if a < arr[m]:  # arr[b] <= a <= arr[m - 1]
         e = m - 1
-    else: # arr[m] <= a <= arr[e]
+    else:  # arr[m] <= a <= arr[e]
         b = m + 1
     return locate_helper(arr, a, b, e)
 
@@ -30,10 +30,10 @@ def locate(arr, a):
     return -1.
     """
 
-    if a >= arr[-1]:
-        return -1
-
-    return locate_helper(arr, a, 0, len(arr) - 1)
+    for i in xrange(len(arr)):
+        if arr[i] > a:
+            return i
+    return -1
 
 
 def findMedian(array):
@@ -61,9 +61,17 @@ def findMedian(array):
 
         # stick it in the left.  scoot one over to the right if we have to
         split = locate(left, a)
+        if split == -1:
+            left.append(a)
+        else:
+            left = left[:split] + [a] + left[split:]
 
-    pprint(array)
-    return 0
+        if len(left) - len(right) > 1:
+            pluck = left[-1]
+            left = left[:-1]
+            right = [pluck] + right
+
+    return left[-1]
 
 
 class Tests(unittest.TestCase):
@@ -89,6 +97,10 @@ class Tests(unittest.TestCase):
         self.assertEqual(4, locate(arr, 4))
         self.assertEqual(0, locate(arr, 0))
         self.assertEqual(-1, locate(arr, 7))
+
+    def testFind(self):
+        arr = [1, 7, 2, 4, 5, 1, 8, 0, 3]
+        self.assertEqual(3, findMedian(arr))
 
 
 if __name__ == '__main__':
