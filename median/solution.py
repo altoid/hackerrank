@@ -6,14 +6,15 @@ import unittest
 
 
 def locate_helper(arr, a, b, e):
-    # arr is a sorted array.  do a binary search to see where a should be located in arr so that arr remains sorted.
-
     if b >= e:
         return b
 
     # find the index of the smallest element in arr that is > a.
+    # just find the index of a and scan rightward until we find
+    # what we want.
 
     m = (b + e) / 2
+
     if a < arr[m]:  # arr[b] <= a <= arr[m - 1]
         e = m - 1
     else:  # arr[m] <= a <= arr[e]
@@ -30,10 +31,21 @@ def locate(arr, a):
     return -1.
     """
 
-    for i in xrange(len(arr)):
-        if arr[i] > a:
-            return i
-    return -1
+    # for i in xrange(len(arr)):
+    #     if arr[i] > a:
+    #         return i
+    # return -1
+
+    if not arr:
+        return -1
+
+    if arr[-1] <= a:
+        return -1
+
+    split = locate_helper(arr, a, 0, len(arr) - 1)
+    while arr[split] <= a:
+        split += 1
+    return split
 
 
 def findMedian(array):
@@ -48,30 +60,16 @@ def findMedian(array):
     if len(array) == 1:
         return array[0]
 
-    left = []
-    right = []
+    scratch = []
 
     for a in array:
-        # invariants:
-        # - left and right are both sorted
-        # - len(left) - len(right) is 0 or 1
-        if len(left) == 0:
-            left.append(a)
-            continue
-
-        # stick it in the left.  scoot one over to the right if we have to
-        split = locate(left, a)
+        split = locate(scratch, a)
         if split == -1:
-            left.append(a)
+            scratch.append(a)
         else:
-            left = left[:split] + [a] + left[split:]
+            scratch = scratch[:split] + [a] + scratch[split:]
 
-        if len(left) - len(right) > 1:
-            pluck = left[-1]
-            left = left[:-1]
-            right = [pluck] + right
-
-    return left[-1]
+    return scratch[len(scratch) / 2]
 
 
 class Tests(unittest.TestCase):
@@ -100,6 +98,9 @@ class Tests(unittest.TestCase):
 
     def testFind(self):
         arr = [1, 7, 2, 4, 5, 1, 8, 0, 3]
+        self.assertEqual(3, findMedian(arr))
+
+        arr = [0, 1, 2, 4, 6, 5, 3]
         self.assertEqual(3, findMedian(arr))
 
 
