@@ -36,7 +36,7 @@ def legoBlocks(h, w):
         return 1
 
     total = block_combos(w) ** h
-    sign = -1
+    sign = -1 if w > 1 else 0
     for i in xrange(1, w - 1):
         addend = (w - 1) * (2 ** (h * (w - 1 - i)))
         addend *= sign
@@ -45,7 +45,7 @@ def legoBlocks(h, w):
 
     total += sign * 1
 
-    return total
+    return total % 1000000007
 
 
 class Tests(unittest.TestCase):
@@ -59,10 +59,10 @@ class Tests(unittest.TestCase):
         self.assertEqual(7, legoBlocks(3, 2))
         self.assertEqual(9, legoBlocks(2, 3))
         self.assertEqual(3375, legoBlocks(4, 4))
-        pass
 
-    # def test_basis(self):
-    #     self.assertEqual(1, legoBlocks(1, 1))
-    #     self.assertEqual(1, legoBlocks(1, 3))
-    #     self.assertEqual(0, legoBlocks(1, 5))
+    def test_basis(self):
+        self.assertEqual(1, legoBlocks(1, 1))
+        self.assertEqual(1, legoBlocks(1, 3))
+        self.assertEqual(0, legoBlocks(1, 5))
 
+        self.assertEqual(1, legoBlocks(5, 1))
