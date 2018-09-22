@@ -48,6 +48,14 @@ def legoBlocks(h, w):
     return total % 1000000007
 
 
+if __name__ == '__main__':
+    fi = fileinput.FileInput()
+    ncases = int(fi.readline().strip())
+    for _ in xrange(ncases):
+        h, w = map(int, fi.readline().strip().split())
+        print legoBlocks(h, w)
+
+
 class Tests(unittest.TestCase):
 
     # def test1(self):
