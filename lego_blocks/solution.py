@@ -6,8 +6,23 @@ import unittest
 block_combos_cache = {}
 all_walls_cache = {}
 lego_blocks_cache = {}
+power_cache = {}
 
 MODULUS = 1000000007
+
+
+def power(x, n):
+    t = tuple([x, n])
+    if t not in power_cache:
+        # result = (x ** n) % MODULUS
+        result = 1
+        while n > 0:
+            if n & 1:
+                result = (result * x) % MODULUS
+            x = (x * x) % MODULUS
+            n = n >> 1
+        power_cache[t] = result
+    return power_cache[t]
 
 
 def block_combos(w):
@@ -36,7 +51,7 @@ def block_combos(w):
 def all_walls(h, w):
     t = tuple([h, w])
     if t not in all_walls_cache:
-        result = block_combos(w) ** h
+        result = power(block_combos(w), h)
         all_walls_cache[t] = result % MODULUS
     return all_walls_cache[t]
 
@@ -49,7 +64,7 @@ def legoBlocks(h, w):
         elif w == 1:
             result = 1
         elif w == 2:
-            result = 2 ** h - 1
+            result = power(2, h) - 1
         else:
             total = all_walls(h, w)
             s = 0
@@ -70,6 +85,10 @@ if __name__ == '__main__':
 
 
 class Tests(unittest.TestCase):
+
+    def test_power(self):
+        self.assertEqual(32, power(2, 5))
+        self.assertEqual(81, power(3, 4))
 
     def test_samples(self):
         self.assertEqual(1, legoBlocks(2, 1))
