@@ -28,7 +28,7 @@ def block_combos(w):
         else:
             result = block_combos(w - 1) + block_combos(w - 2) + block_combos(w - 3) + block_combos(w - 4)
 
-        block_combos_cache[w] = result
+        block_combos_cache[w] = result % MODULUS
 
     return block_combos_cache[w]
 
@@ -37,7 +37,7 @@ def all_walls(h, w):
     t = tuple([h, w])
     if t not in all_walls_cache:
         result = block_combos(w) ** h
-        all_walls_cache[t] = result
+        all_walls_cache[t] = result % MODULUS
     return all_walls_cache[t]
 
 
