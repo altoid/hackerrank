@@ -19,28 +19,6 @@ def findMedian(array):
 
 
 class Tests(unittest.TestCase):
-    def test1(self):
-        arr = [1]
-        a = 1
-        split = locate(arr, a)
-        self.assertEqual(-1, split)
-
-        a = 0
-        split = locate(arr, a)
-        self.assertEqual(0, split)
-
-    def test2(self):
-        self.assertEqual(1, locate([2, 4, 6], 2))
-
-    def test3(self):
-        self.assertEqual(3, locate([2, 4, 4, 6], 4))
-
-        arr = [2, 4, 4, 4, 6]
-        self.assertEqual(0, locate(arr, 0))
-        self.assertEqual(1, locate(arr, 2))
-        self.assertEqual(4, locate(arr, 4))
-        self.assertEqual(0, locate(arr, 0))
-        self.assertEqual(-1, locate(arr, 7))
 
     def testFind(self):
         arr = [1, 7, 2, 4, 5, 1, 8, 0, 3]
