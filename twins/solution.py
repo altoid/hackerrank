@@ -3,11 +3,6 @@
 import math
 import unittest
 
-SIZE = 100
-
-LARGE = 10 ** 2
-SEGMENT_SIZE = 10 ** 1
-
 
 def sieve(arr):
     arr[0] = 0
@@ -41,17 +36,6 @@ def sieve(arr):
 # is bigger than m.
 
 
-def gcd(a, b):
-    while b:
-        a, b = b, a % b
-
-    return a
-
-
-def lcm(a, b):
-    return a * b / gcd(a, b)
-
-
 def roundup(a, b):
     """
     round up a to the nearest multiple of b
@@ -59,14 +43,14 @@ def roundup(a, b):
     return ((a + b - 1) / b) * b
 
 
-def segmented_sieve(primes_so_far, left, right):
+def segmented_sieve_helper(primes_so_far, left, right, segment_size):
     arr = [x for x in xrange(left, right)]
 
     # zero out 1
     if left == 0:
         arr[1] = 0
 
-    print arr
+#    print arr
 
     # sieve out elements using primes collected from previous iterations
     for p in primes_so_far:
@@ -85,11 +69,11 @@ def segmented_sieve(primes_so_far, left, right):
     # find index of next prime in arr
     i = 0
     
-    while i < SEGMENT_SIZE and arr[i] < math.sqrt(right):
-        while i < SEGMENT_SIZE and arr[i] == 0:
+    while i < segment_size and arr[i] < math.sqrt(right):
+        while i < segment_size and arr[i] == 0:
             i += 1
 
-        if i >= SEGMENT_SIZE or arr[i] >= math.sqrt(right):
+        if i >= segment_size or arr[i] >= math.sqrt(right):
             break
 
         for j in xrange(arr[i] * 2, right, arr[i]):
@@ -101,26 +85,24 @@ def segmented_sieve(primes_so_far, left, right):
     primes_so_far += filter(lambda x: x != 0, arr)
 
 
+def segmented_sieve(size, segment_size):
+    i = 0
+    collected_primes = []
+    while i < size:
+        segmented_sieve_helper(collected_primes, i, i + segment_size, segment_size)
+        i += segment_size
+    return collected_primes
+
+
 class Tests(unittest.TestCase):
     def test1(self):
         size = 100
         segment_size = 10
 
         old_way = sieve([x for x in xrange(size)])
-
-        i = 0
-        collected_primes = []
-        while i < size:
-            segmented_sieve(collected_primes, i, i + segment_size)
-            i += segment_size
+        new_way = segmented_sieve(size, segment_size)
 
         print old_way
-        print collected_primes
+        print new_way
 
-        self.assertEqual(old_way, collected_primes)
-
-        # print "segmented_sieve: ", collected_primes
-        #
-        # primes = sieve([x for x in xrange(SIZE)])
-        #
-        # print "regular sieve: ", primes
+        self.assertEqual(old_way, new_way)
