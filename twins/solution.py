@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import math
+import unittest
 
 SIZE = 100
 
@@ -15,12 +16,12 @@ def sieve(arr):
     # find index of next prime in arr
     
     i = 0
-    
-    while i < math.sqrt(SIZE):
+    size = len(arr)
+    while i < math.sqrt(size):
         while arr[i] == 0:
             i += 1
         
-        for j in xrange(i * 2, SIZE, i):
+        for j in xrange(i * 2, size, i):
             arr[j] = 0
     
         i += 1
@@ -88,7 +89,7 @@ def segmented_sieve(primes_so_far, left, right):
         while i < SEGMENT_SIZE and arr[i] == 0:
             i += 1
 
-        if i >= SEGMENT_SIZE or arr[i] < math.sqrt(right):
+        if i >= SEGMENT_SIZE or arr[i] >= math.sqrt(right):
             break
 
         for j in xrange(arr[i] * 2, right, arr[i]):
@@ -100,14 +101,26 @@ def segmented_sieve(primes_so_far, left, right):
     primes_so_far += filter(lambda x: x != 0, arr)
 
 
-i = 0
-collected_primes = []
-while i < LARGE:
-    segmented_sieve(collected_primes, i, i + SEGMENT_SIZE)
-    i += SEGMENT_SIZE
+class Tests(unittest.TestCase):
+    def test1(self):
+        size = 100
+        segment_size = 10
 
-print "segmented_sieve: ", collected_primes
+        old_way = sieve([x for x in xrange(size)])
 
-primes = sieve([x for x in xrange(SIZE)])
+        i = 0
+        collected_primes = []
+        while i < size:
+            segmented_sieve(collected_primes, i, i + segment_size)
+            i += segment_size
 
-print "regular sieve: ", primes
+        print old_way
+        print collected_primes
+
+        self.assertEqual(old_way, collected_primes)
+
+        # print "segmented_sieve: ", collected_primes
+        #
+        # primes = sieve([x for x in xrange(SIZE)])
+        #
+        # print "regular sieve: ", primes
