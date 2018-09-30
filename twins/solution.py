@@ -76,8 +76,21 @@ def segmented_sieve(a, b):
     return result
 
 
+def solve(n, m):
+    # 1 <= n <= m <= 10 ** 9
+    # m - n <= 10 ** 6
+    primes = segmented_sieve(n, m)
+    result = 0
+    for i in xrange(len(primes) - 1):
+        if primes[i + 1] - primes[i] == 2:
+            result += 1
+    return result
+
 if __name__ == '__main__':
     fi = fileinput.FileInput()
+    n, m = map(int, fi.readline().strip().split(' '))
+    result = solve(n, m)
+    print result
 
 
 class Tests(unittest.TestCase):
@@ -103,8 +116,19 @@ class Tests(unittest.TestCase):
     #     primes = segmented_sieve(size - 10 ** 6, size)
     #     print len(primes)
 
+    def test_range_is_1(self):
+        primes = segmented_sieve(13, 13)
+        self.assertEqual([13], primes)
+
+        primes = segmented_sieve(12, 12)
+        self.assertEqual([], primes)
+
     def test4(self):
         primes = segmented_sieve(0, 13)
-        print primes
         self.assertEqual([2, 3, 5, 7, 11, 13], primes)
+
+    def test_sample0(self):
+        result = solve(3, 13)
+        self.assertEqual(3, result)
+
 
