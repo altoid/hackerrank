@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-import math
 import unittest
 import fileinput
 
+import math
 
 def simple_sieve(up_to):
     arr = [x for x in xrange(up_to + 1)]
@@ -25,18 +25,6 @@ def simple_sieve(up_to):
 
     return filter(lambda x: x != 0, arr)
 
-#simple_sieve(arr)
-#print filter(lambda x: x != 0, arr)
-
-# segmented simple_sieve:  for n large (e.g. 10 ** 9)
-# work on subarrays of size at most 10 ** 7
-# collect the primes from the first segment
-# use those to simple_sieve out primes in the next segment
-# etc.
-#
-# for this problem, stop at the first segment whose right hand endpoint
-# is bigger than m.
-
 
 def roundup(a, b):
     """
@@ -56,6 +44,8 @@ def segmented_sieve(a, b):
 
     # get all the primes up to sqrt(size) using simple sieve
     squirt = int(math.sqrt(b))
+    if squirt == 1:
+        squirt = b
     primes = simple_sieve(squirt)
 
     upto = b + 1  # want ranges to include b
@@ -79,11 +69,14 @@ def segmented_sieve(a, b):
 def solve(n, m):
     # 1 <= n <= m <= 10 ** 9
     # m - n <= 10 ** 6
-    primes = segmented_sieve(n, m)
+
     result = 0
-    for i in xrange(len(primes) - 1):
-        if primes[i + 1] - primes[i] == 2:
-            result += 1
+    if m - n > 1:
+        primes = segmented_sieve(n, m)
+        if len(primes) > 1:
+            for i in xrange(len(primes) - 1):
+                if primes[i + 1] - primes[i] == 2:
+                    result += 1
     return result
 
 if __name__ == '__main__':
@@ -94,6 +87,11 @@ if __name__ == '__main__':
 
 
 class Tests(unittest.TestCase):
+
+    def test_simple_sieve(self):
+        primes = simple_sieve(3)
+        self.assertEqual([2, 3], primes)
+
     def test1(self):
         size = 101
 
@@ -131,4 +129,10 @@ class Tests(unittest.TestCase):
         result = solve(3, 13)
         self.assertEqual(3, result)
 
+    def test_case_25(self):
+        result = solve(3, 3)
+        self.assertEqual(0, result)
 
+    def test_case_27(self):
+        result = solve(1, 1)
+        self.assertEqual(0, result)
