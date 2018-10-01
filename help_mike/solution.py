@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import unittest
-
 def howmany(a, b):
     return (a + b - 1) / b
 
@@ -55,6 +53,8 @@ def solve(n, k):
 
     return total
 
+import unittest
+
 class Tests(unittest.TestCase):
     def test_cards(self):
         c = get_cardinalities(10, 4)
@@ -79,3 +79,6 @@ class Tests(unittest.TestCase):
     def test_solve(self):
         self.assertEqual(10, solve(10, 4))
         self.assertEqual(7, solve(7, 3))
+        self.assertEqual(21, solve(7, 1))
+
+        self.assertEqual(49999999900000, solve(10 ** 9, 10000))
