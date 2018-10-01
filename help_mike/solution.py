@@ -33,8 +33,12 @@ def get_cardinalities(n, k):
     return cardinalities
 
 def solve(n, k):
+    # if k is 1, special case; answer is number of pairs with unique values
+    if k == 1:
+        return (n * (n - 1)) / 2
+        
     cardinalities = get_cardinalities(n, k)
-    summands = get_summands(n, k)
+    summands = get_summands(k)
 
     total = 0
     for s in summands:
@@ -71,3 +75,7 @@ class Tests(unittest.TestCase):
 
         s = get_summands(13)
         self.assertEqual({1: 12, 2: 11, 3: 10, 4: 9, 5: 8, 6: 7}, s)
+
+    def test_solve(self):
+        self.assertEqual(10, solve(10, 4))
+        self.assertEqual(7, solve(7, 3))
