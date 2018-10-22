@@ -3,6 +3,7 @@ class Matrix private(val nrows: Int, val ncolumns: Int, val matrix: Array[Int]) 
   require(nrows > 0)
   require(ncolumns > 0)
 
+  // public constructor
   def this(nrows: Int, ncolumns: Int) = this(nrows, ncolumns, new Array[Int](nrows * ncolumns))
 
   def copy(): Matrix = {
@@ -45,7 +46,9 @@ class Matrix private(val nrows: Int, val ncolumns: Int, val matrix: Array[Int]) 
   def pow(exp: Int): Matrix = {
     require(exp > 0)
 
-    ???
+    if (exp == 1) this.copy()
+    else if (exp % 2 == 1) this * this.pow(exp - 1)
+    else this.pow(exp / 2) * this.pow(exp / 2)
   }
 }
 
@@ -70,5 +73,17 @@ object Sandbox {
     product_copy.set(0, 0, 444)
     product.display()
     product_copy.display()
+
+    val fibonacci = new Matrix(2, 2)
+    for (r <- 0 until fibonacci.nrows) {
+      for (c <- 0 until fibonacci.ncolumns) {
+        fibonacci.set(r, c, 1)
+      }
+    }
+    fibonacci.set(0, 0, 0)
+    for (i <- 1 to 5) {
+      println(s"----- pow = $i")
+      fibonacci.pow(i).display()
+    }
   }
 }
