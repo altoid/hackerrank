@@ -46,9 +46,27 @@ class Matrix private(val nrows: Int, val ncolumns: Int, val matrix: Array[Int]) 
   def pow(exp: Int): Matrix = {
     require(exp > 0)
 
-    if (exp == 1) this.copy()
-    else if (exp % 2 == 1) this * this.pow(exp - 1)
-    else this.pow(exp / 2) * this.pow(exp / 2)
+    var calls = 0
+    var multiplies = 0
+
+    def pow_helper(exp: Int): Matrix = {
+      calls += 1
+      if (exp == 1) this.copy()
+      else if (exp % 2 == 1) {
+        multiplies += 1
+        this * pow_helper(exp - 1)
+      }
+      else {
+        val m = pow_helper(exp / 2)
+        multiplies += 1
+        m * m
+      }
+    }
+
+    var result = pow_helper(exp)
+    println(s"calls = $calls")
+    println(s"multiplies = $multiplies")
+    result
   }
 }
 
@@ -81,9 +99,13 @@ object Sandbox {
       }
     }
     fibonacci.set(0, 0, 0)
-    for (i <- 1 to 5) {
-      println(s"----- pow = $i")
-      fibonacci.pow(i).display()
-    }
+//    for (i <- 1 to 5) {
+//      println(s"----- pow = $i")
+//      fibonacci.pow(i).display()
+//    }
+    println("----- pow = 23")
+    fibonacci.pow(23).display()
+    println("----- pow = 233")
+    fibonacci.pow(233).display()
   }
 }
