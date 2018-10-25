@@ -5,38 +5,6 @@ import scala.collection.mutable.ArrayBuffer
 
 object chandrima_xor {
 
-  def solve(arr: Array[Long]): Int = {
-    // for each number in arr, turn it into a list of bits.
-    val a2 = arr.map(x => x.toBinaryString.toArray.map(_.asDigit))
-    val maxlength = (a2 foldLeft 0)((b, a) => a.length max b)
-
-    // pad on the left with 0s
-    val a3 = a2.map(x => {
-      val padding = Array.fill(maxlength - x.length)(0)
-      padding ++ x
-    })
-
-    for (x <- a3) {
-      println(x.mkString)
-    }
-
-    val s = a3.map(_(0))
-    println(s.foldLeft(0)(_ + _))
-
-    val counts = ArrayBuffer[Int]()
-    val xors = ArrayBuffer[Int]()
-
-    for (i <- 0 until maxlength) {
-      val s = a3.map(_(i))
-      counts += s.foldLeft(0)(_ + _)
-      xors += s.foldLeft(0)((b, a) => a ^ b)
-    }
-
-    println(counts.toArray.mkString(" "))
-    println(xors.toArray.mkString(" "))
-    0
-  }
-
   // return true iff n has no runs of consecutive 1 bits.
   def isKosher(n: Long): Boolean = (n & (n << 1)) == 0
 
@@ -44,7 +12,7 @@ object chandrima_xor {
 
   def longToBits(n: Long, fillTo: Int = 0): String = {
     // left pad with 0 until the string is fillTo long.  if fillTo is 0, do not pad.
-    val bits = n.toBinaryString.toArray.map(_.asDigit).mkString
+    val bits = n.toBinaryString
 
     val padding = if (fillTo > 0) (fillTo - bits.length max 0) else 0
     Array.fill(padding)(0).mkString ++ bits
@@ -108,6 +76,23 @@ object chandrima_xor {
     result
   }
 
+  def solve(arr: Array[Long]): Long = {
+    var filtered = arr.filter(isKosher(_))
+
+    println(arr.mkString(" "))
+
+    var nremoved = arr.length - filtered.length
+    var last = filtered.last
+    while (nremoved > 0) {
+      last = successor(last)
+      filtered = filtered :+ last
+      nremoved -= 1
+    }
+    println(filtered.mkString(" "))
+    (filtered foldLeft 0L)((b, a) => a ^ b)
+  }
+
+
   def main(args: Array[String]): Unit = {
     val arr = ArrayBuffer[Long]()
     arr += math.pow(10, 18).toLong
@@ -126,13 +111,22 @@ object chandrima_xor {
 //    println(bitsToLong(morebits))
 //    println(bitsToLong(morebits).toBinaryString.toArray.map(_.asDigit).mkString)
 
-    n = 1
-    println(longToBits(n, 60))
-    while (n < 256) {
-      n = successor(n)
-    }
+//    n = 1
+//    println(longToBits(n, 60))
+//    while (n < 256) {
+//      n = successor(n)
+//    }
+//
+//    n = math.pow(10, 13).toLong
+//    n = successor(n)
 
-    n = math.pow(10, 13).toLong
-    n = successor(n)
+    var answer = solve(Array(1,2,3,4,5))
+    println(answer)
+
+    answer = solve(Array(1,2,3))
+    println(answer)
+
+    answer = solve(Array(1,3,4))
+    println(answer)
   }
 }
