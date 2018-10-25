@@ -81,24 +81,31 @@ object chandrima_xor {
     //this is what we add to the original number.  if the result still has
     //consecutive 11 bits, do it again.
 
-    val shifted_n = n << 1
-    val result = n & shifted_n
-    val result_shifted = result >> 1
+    def addend(n: Long): Long = {
+      if (isKosher(n)) 1
+      else {
+        val shifted_n = n << 1
+        val result = n & shifted_n
+        val result_shifted = result >> 1
+        val a = ~result & result_shifted
+        a
+      }
+    }
 
-    println(longToBits(n, 60))
-    println(longToBits(shifted_n, 60))
-    println(longToBits(result, 60))
+    println("------------------")
+    var a = addend(n)
+    var result = n + a
+    println(longToBits(n, 60) + " << n")
+    while (!isKosher(result)) {
+      a = addend(result)
+//      println(longToBits(a, 60) + " << a")
+//      println(longToBits(result, 60) + " << result")
 
-    val result_bits = result.toBinaryString.toArray.map(_.asDigit)
-    val result_shifted_bits = result_shifted.toBinaryString.toArray.map(_.asDigit)
-
-    val addend = ~result & result_shifted
-    println(longToBits(result_shifted, 60))
-    println()
-    println(longToBits(n, 60))
-    println(longToBits(addend, 60))
-    println(longToBits(n + addend, 60))
-    0
+      result += a
+    }
+//    println(longToBits(a, 60) + " << a")
+    println(longToBits(result, 60) + " << result")
+    result
   }
 
   def main(args: Array[String]): Unit = {
@@ -107,7 +114,7 @@ object chandrima_xor {
     arr += math.pow(10, 13).toLong
     arr += math.pow(10, 11).toLong
 
-    val n = math.pow(10, 13).toLong
+    var n = math.pow(10, 13).toLong
 //    val bits = n.toBinaryString.toArray.map(_.asDigit)
 //    val n2 = bitsToLong(n.toBinaryString)
 //
@@ -119,7 +126,13 @@ object chandrima_xor {
 //    println(bitsToLong(morebits))
 //    println(bitsToLong(morebits).toBinaryString.toArray.map(_.asDigit).mkString)
 
-    val s = successor(n)
-  }
+    n = 1
+    println(longToBits(n, 60))
+    while (n < 256) {
+      n = successor(n)
+    }
 
+    n = math.pow(10, 13).toLong
+    n = successor(n)
+  }
 }
