@@ -4,7 +4,7 @@ object manasa_factorial {
 
   def solve(nzeroes: Long): Long = {
     // n is the number of zeroes.  need to find smallest m such that m! has at least that many zeroes at the end.
-    val upper_bound = math.pow(10, 16).toLong
+    val upper_bound = 5 * math.pow(10, 16).toLong
 
     val powers_of_5_buf = mutable.ArrayBuffer[Long]()
 
@@ -32,7 +32,7 @@ object manasa_factorial {
         // throw new Exception("doh")
         var check = left
         while (count_zeroes(check) < nzeroes) {
-          check += 5
+          check += 1
         }
         return check
       }
@@ -58,16 +58,18 @@ object manasa_factorial {
 
   def main(args: Array[String]): Unit = {
 
-//    println(solve(23))
-//    println(solve(22))
-//    println(solve(24))
-//    println(solve(1))   // 5
-//    println(solve(2))   // 10
-//    println(solve(3))   // 15
+    println(solve(23))
+    println(solve(22))
+    println(solve(24))
+    println(solve(1))   // 5
+    println(solve(2))   // 10
+    println(solve(3))   // 15
 
     println(solve(629)) // 2525
     println(solve(236)) // 950
     println(solve(183))  // 740
+
+    println(solve(4264777785391999L))  // 17059111141568050
   }
 
 
