@@ -13,6 +13,8 @@ object manasa_factorial {
       powers_of_5_buf += p
       p *= 5
     }
+    // put one more in.  this will give us the smallest power of 5 > upper_bound, which we need to give us a 0 quotient
+    // in count_zeroes_helper.
     powers_of_5_buf += p
 
     val powers_of_5 = powers_of_5_buf.toArray
@@ -29,7 +31,6 @@ object manasa_factorial {
     def search(left: Long, right: Long): Long = {
       val mid = (left + right) / 2
       if (right <= left) {
-        // throw new Exception("doh")
         var check = left
         while (count_zeroes(check) < nzeroes) {
           check += 1
