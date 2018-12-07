@@ -1,9 +1,7 @@
 object CamelCase {
 
   def camelcase(s: String): Int = {
-    val uppers = s.filter(_.isUpper)
-    println(uppers)
-    uppers.length + 1
+    s.filter(_.isUpper).length + 1
   }
 
   def main(args: Array[String]): Unit = {
