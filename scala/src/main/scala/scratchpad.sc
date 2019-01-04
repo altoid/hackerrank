@@ -7,3 +7,6 @@ val s2 = "cde"
 
 println(s1 diff s2)
 
+var r = 10 until 1 by -1
+r.foreach(println)
+

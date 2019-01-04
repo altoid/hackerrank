@@ -18,22 +18,21 @@ object SherlockAndAnagrams {
       m += (ss -> (m(ss) + 1))
     }
     //println(m.mkString(" "))
-    val counts = m.filter(p => p._2 > 1).values
-    counts.map(x => (x * (x - 1) / 2)).sum
+    val counts = m.values
+    counts.map(x => x * (x - 1) / 2).sum
   }
 
   def sherlockAndAnagrams(s: String): Int = {
-    var total = 0
-    for (i <- 1 to s.length) {
-      total += totalByLength(s, i)
+    val x = for (i <- 1 until s.length) yield {
+      totalByLength(s, i)
     }
-    total
+    x.sum
   }
 
   def main(args: Array[String]): Unit = {
     println(sherlockAndAnagrams("spinnipspinssnip"))
     println(sherlockAndAnagrams("kkkk")) // 10
-//    println(solution("ifailuhkqq")) // 3
+    println(sherlockAndAnagrams("ifailuhkqq")) // 3
     println(sherlockAndAnagrams("cdcd")) // 5
   }
 }
