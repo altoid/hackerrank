@@ -24,3 +24,9 @@ group by start_dates.d
 ) ans
 order by ddiff, sd
 ;
+
+/*
+a start date for a project is not the end date of any project.
+
+an end date for a project is not the start date of any project.
+*/
