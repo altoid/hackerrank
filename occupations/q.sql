@@ -100,5 +100,5 @@ union
 select * from t8
 ;
 
-select doctors, actors, singers, professors from t9
+select doctors, professors, singers, actors from t9
 ;
