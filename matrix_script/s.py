@@ -2,6 +2,7 @@
 
 import unittest
 from pprint import pprint
+import re
 
 if __name__ == '__main__':
 
@@ -29,3 +30,45 @@ if __name__ == '__main__':
 
     l3 = ''.join(l2)
     print l3
+
+    # replace [' ' ! @ # $ % &]* with a single space when these occur between two alphanumeric characters.
+
+
+class MyTest(unittest.TestCase):
+    def setUp(self):
+        self.pattern = r'(.*[A-Za-z])[ \!\@\#\$\%\&]+([A-Za-z])'
+        self.pattern2 = r'([A-Za-z])[ \!\@\#\$\%\&]+([A-Za-z])'
+
+    def test1(self):
+        test = "A !@#$%&B"
+        result = re.sub(self.pattern,
+                        r'\1 \2',
+                        test)
+        self.assertEqual("A B", result)
+
+    def test1_5(self):
+        test = "A !@#$%&!@#$%&B"
+        result = re.sub(self.pattern,
+                        r'\1 \2',
+                        test)
+        self.assertEqual("A B", result)
+
+    def test2(self):
+        test = "A !@#$%&B !@#$%&C !@#$%&"
+        print
+        result = re.sub(self.pattern,
+                        r'\1 \2',
+                        test)
+        print result
+        result = re.sub(self.pattern2,
+                        r'\1 \2',
+                        result)
+        print result
+        self.assertEqual("A B C !@#$%&", result)
+
+    def test3(self):
+        test = "A B !@#$%&C !@#$%&"
+        result = re.sub(self.pattern,
+                        r'\1 \2',
+                        test)
+        self.assertEqual("A B C !@#$%&", result)
