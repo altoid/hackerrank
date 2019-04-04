@@ -22,33 +22,52 @@ def subsets(arr):
         yield s
 
 def solution(arr):
-    max_sum = None
+    # assumes there is at least 1 element in the array
 
-    for s in subsets(arr):
-        current_sum = sum(s)
-        if max_sum is None:
-            max_sum = current_sum
+    current_max = arr[0]
+    if len(arr) == 1:
+        return current_max
 
-        if current_sum > max_sum:
-            max_sum = current_sum
+    back1 = current_max
+    current_max = max(back1, arr[1])
 
-    return max_sum
+    if len(arr) == 2:
+        return current_max
+
+    abs_max = current_max
+    for a in arr[2:]:
+        back2 = back1
+        back1 = current_max
+        current_max = max(a, a + back2, back1)
+        abs_max = max(abs_max, current_max)
+
+    return abs_max
 
 class SumTest(unittest.TestCase):
     def test1(self):
+        arr = [3]
+        self.assertEqual(3, solution(arr))
+
+    def test2(self):
+        arr = [3, 4]
+        self.assertEqual(4, solution(arr))
+
+    def test3(self):
+        arr = [3, 4, 5]
+        self.assertEqual(8, solution(arr))
+
+    def test5a(self):
         arr = [3,5,-7,8,10]
         self.assertEqual(15, solution(arr))
 
-    def test2(self):
+    def test5b(self):
         arr = [3,7,4,6,5]
         self.assertEqual(13, solution(arr))
 
-    def test3(self):
+    def test_file(self):
         with open('input00.txt') as f:
             f.readline()  # throw it away
             arr = map(int, f.readline().strip().split(' '))
-        print arr[0]
-        print len(arr)
         self.assertEqual(151598486, solution(arr))
 
 class SubsetTest(unittest.TestCase):
