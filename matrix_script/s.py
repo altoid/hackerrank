@@ -4,40 +4,44 @@ import unittest
 from pprint import pprint
 import re
 
-if __name__ == '__main__':
+nm = raw_input().split()
 
-    nm = raw_input().split()
+n = int(nm[0])
 
-    n = int(nm[0])
+m = int(nm[1])  # columns
 
-    m = int(nm[1])  # columns
+matrix = []
 
-    matrix = []
+for _ in xrange(n):
+    matrix_item = raw_input()
+    matrix.append(matrix_item)
 
-    for _ in xrange(n):
-        matrix_item = raw_input()
-        matrix.append(matrix_item)
+# no if statements allowed
 
-    pprint(matrix)
+pattern = r'(.*[A-Za-z0-9])[ !@#$%&]+([A-Za-z0-9])'
+pattern2 = r'([A-Za-z0-9])[ !@#$%&]+([A-Za-z0-9])'
 
-    # no if statements allowed
+lines = [[row[i] for row in matrix] for i in xrange(m)]
 
-    lines = [[row[i] for row in matrix] for i in xrange(m)]
-    print lines
+l2 = [''.join(line) for line in lines]
 
-    l2 = [''.join(line) for line in lines]
-    print l2
+l3 = ''.join(l2)
 
-    l3 = ''.join(l2)
-    print l3
+# replace [' ' ! @ # $ % &]* with a single space when these occur between two alphanumeric characters.
 
-    # replace [' ' ! @ # $ % &]* with a single space when these occur between two alphanumeric characters.
+result = re.sub(pattern,
+                r'\1 \2',
+                l3)
+result = re.sub(pattern2,
+                r'\1 \2',
+                result)
 
+print result
 
 class MyTest(unittest.TestCase):
     def setUp(self):
-        self.pattern = r'(.*[A-Za-z])[ \!\@\#\$\%\&]+([A-Za-z])'
-        self.pattern2 = r'([A-Za-z])[ \!\@\#\$\%\&]+([A-Za-z])'
+        self.pattern = r'(.*[A-Za-z])[ !@#$%&]+([A-Za-z])'
+        self.pattern2 = r'([A-Za-z])[ !@#$%&]+([A-Za-z])'
 
     def test1(self):
         test = "A !@#$%&B"
@@ -55,15 +59,12 @@ class MyTest(unittest.TestCase):
 
     def test2(self):
         test = "A !@#$%&B !@#$%&C !@#$%&"
-        print
         result = re.sub(self.pattern,
                         r'\1 \2',
                         test)
-        print result
         result = re.sub(self.pattern2,
                         r'\1 \2',
                         result)
-        print result
         self.assertEqual("A B C !@#$%&", result)
 
     def test3(self):
@@ -72,3 +73,14 @@ class MyTest(unittest.TestCase):
                         r'\1 \2',
                         test)
         self.assertEqual("A B C !@#$%&", result)
+
+    def test4(self):
+        test = r'This$#is% Matrix#  %!'
+        result = re.sub(self.pattern,
+                        r'\1 \2',
+                        test)
+        result = re.sub(self.pattern2,
+                        r'\1 \2',
+                        result)
+        self.assertEqual("This is Matrix#  %!", result)
+
