@@ -14,7 +14,7 @@ def whatFlavors(cost_arr, money):
         cost_to_idx[c].append(i)
         i += 1
 
-    pprint(cost_to_idx)
+#    pprint(cost_to_idx)
 
     complements = {}
     for c in cost_arr:
@@ -22,7 +22,7 @@ def whatFlavors(cost_arr, money):
             if 0 < (money - c) < money:
                 complements[c] = money - c
 
-    pprint(complements)
+#    pprint(complements)
 
     # traverse the complements dict.  if k = v and k doesn't map to two elements
     # in cost_to_idx, it's not the answer.
@@ -32,14 +32,25 @@ def whatFlavors(cost_arr, money):
             result = sorted(cost_to_idx[k])
             break
 
+        if k not in cost_to_idx or v not in cost_to_idx:
+            continue
+
         result = sorted([cost_to_idx[k][0], cost_to_idx[v][0]])
         break
 
-    print result[0], result[1]
+    return result
 
 class MyTest(unittest.TestCase):
     
     def test1(self):
         money = 4
         costs = [1,4,5,3,2]
-        whatFlavors(costs, money)
+        result = whatFlavors(costs, money)
+        self.assertEqual([1, 4], result)
+    
+    def test2(self):
+        money = 4
+        costs = [1,4,5,2,2]
+        result = whatFlavors(costs, money)
+        self.assertEqual([4, 5], result)
+
