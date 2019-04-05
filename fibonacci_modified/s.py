@@ -4,27 +4,30 @@
 
 import unittest
 
-cache = {
-    1: 0,
-    2: 1,
-}
-
-
-def modfibo(n):
+def helper(n, cache):
     if n in cache:
         return cache[n]
 
-    tmp = modfibo(n - 1)
-    result = modfibo(n - 2) + tmp * tmp
+    tmp = helper(n - 1, cache)
+    result = helper(n - 2, cache) + tmp * tmp
     cache[n] = result
     return result
+
+def fibonacciModified(t1, t2, n):
+
+    cache = {
+        1: t1,
+        2: t2,
+        }
+
+    return helper(n, cache)
 
 
 class MyTest(unittest.TestCase):
 
     def test1(self):
-        print modfibo(1)
-        print modfibo(7)
-        print modfibo(11)
-        print modfibo(20)
+        self.assertEqual(5, fibonacciModified(0, 1, 5))
+
+    def test2(self):
+        print fibonacciModified(0, 1, 17)
 
