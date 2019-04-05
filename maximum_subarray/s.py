@@ -20,6 +20,8 @@ def max_subsequence(arr):
 
     return max_ending_here
 
+def maxSubarray(arr):
+    return [max_subarray(arr), max_subsequence(arr)]
 
 class MyTest(unittest.TestCase):
 
