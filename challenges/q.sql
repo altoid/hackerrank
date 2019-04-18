@@ -87,9 +87,9 @@ on a.c = b.c
 */
 
 select
-a.*,
-b.*,
-hackers.name
+hackers.name,
+a.hacker_id,
+a.c
 from
 (
     select hacker_id, count(*) c
