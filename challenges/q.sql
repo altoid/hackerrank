@@ -87,8 +87,8 @@ on a.c = b.c
 */
 
 select
-hackers.name,
 a.hacker_id,
+hackers.name,
 a.c
 from
 (
@@ -128,5 +128,5 @@ inner join
 ) b
 on a.c = b.c
 inner join hackers on hackers.hacker_id = a.hacker_id
-order by hacker_id
+order by a.c desc, hacker_id
 ;
