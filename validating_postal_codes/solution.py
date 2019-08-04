@@ -5,39 +5,12 @@ from pprint import pprint
 import unittest
 
 def is_valid(n):
-    if not (100000 <= n < 1000000):
-        return False
-
     sn = str(n)
 
-    if re.match(r'.*0.0', sn):
+    if not re.match(r'[1-9][0-9]{5}', sn):
         return False
 
-    if re.match(r'.*1.1', sn):
-        return False
-
-    if re.match(r'.*2.2', sn):
-        return False
-
-    if re.match(r'.*3.3', sn):
-        return False
-
-    if re.match(r'.*4.4', sn):
-        return False
-
-    if re.match(r'.*5.5', sn):
-        return False
-
-    if re.match(r'.*6.6', sn):
-        return False
-
-    if re.match(r'.*7.7', sn):
-        return False
-
-    if re.match(r'.*8.8', sn):
-        return False
-
-    if re.match(r'.*9.9', sn):
+    if re.match(r'.*([0-9]).\1', sn):
         return False
 
     return True
