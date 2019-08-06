@@ -7,13 +7,12 @@ import unittest
 def is_valid(n):
     sn = str(n)
 
-    if not re.match(r'[1-9][0-9]{5}', sn):
-        return False
+    re1 = r'^[1-9][0-9]{5}$'
+    re2 = r'(?=(0.0)|(1.1)|(2.2)|(3.3)|(4.4)|(5.5)|(6.6)|(7.7)|(8.8)|(9.9))'
 
-    if re.match(r'.*([0-9]).\1', sn):
-        return False
+#    print re.findall(re2, sn)
 
-    return True
+    return re.match(re1, sn) and len(re.findall(re2, sn)) < 2
 
 
 class MyTest(unittest.TestCase):
@@ -30,5 +29,8 @@ class MyTest(unittest.TestCase):
         self.assertFalse(is_valid(010100))
         self.assertFalse(is_valid(001010))
         self.assertFalse(is_valid(000101))
-        self.assertFalse(is_valid(234151))
-        self.assertFalse(is_valid(123432))
+        self.assertTrue(is_valid(234151))
+        self.assertTrue(is_valid(123432))
+
+    def test3(self):
+        self.assertFalse(is_valid(4542867))
