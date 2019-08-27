@@ -1,7 +1,7 @@
 object Anagram {
   def anagram(s: String): Int = {
     // count the number of each char in each half
-    // for each char, subtract the # of each in in left from # in right
+    // for each char, subtract the # of each in left from # in right
     // add up the differences that are > 0
 
     val l = s.length
