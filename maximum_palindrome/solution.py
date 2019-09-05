@@ -25,6 +25,7 @@
 
 import unittest
 from pprint import pprint, pformat
+import math
 
 # compute a 2d array of character counts.  arr[c][i] is the number of times character c appears in the substring
 # that ends at index i, using 1-based indexing
@@ -35,18 +36,10 @@ alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 
 def factorial(n):
-    if n in factorials:
-        return factorials[n]
+    if n not in factorials:
+        factorials[n] = math.factorial(n)
 
-    if n == 0:
-        result = 1
-    elif n == 1:
-        result = 1
-    else:
-        result = n * factorial(n - 1)
-
-    factorials[n] = result
-    return result
+    return factorials[n]
 
 
 def range_lettercount(c, l, r):
@@ -58,19 +51,37 @@ def range_lettercount(c, l, r):
 def initialize(s):
 
     global lettercounts
-
-    lettercounts = {}
+    local_lettercounts = {}
 
     for l in alphabet:
-        lettercounts[l] = [0] * (len(s) + 1)
+        local_lettercounts[l] = [0] * (len(s) + 1)
 
+    letter_indices = {}
     i = 1
-    ln = len(s)
     for k in s:
-        # every time we see a letter, add 1 to lettercounts[k][i:]
-        for j in xrange(i, ln + 1):
-            lettercounts[k][j] += 1
+        if k not in letter_indices:
+            letter_indices[k] = []
+        letter_indices[k].append(i)
         i += 1
+
+#    pprint(letter_indices)
+    for k in alphabet:
+        if k not in letter_indices:
+            continue
+
+        indices = letter_indices[k]
+        counter = 1
+        l = 0
+        while l < len(indices) - 1:
+            for j in range(indices[l], indices[l + 1]):
+                local_lettercounts[k][j] = counter
+            counter += 1
+            l += 1
+        for j in range(indices[l], len(s) + 1):
+            local_lettercounts[k][j] = counter
+
+    lettercounts = local_lettercounts
+#    pprint(lettercounts)
 
 
 def combinations(p):
