@@ -86,8 +86,6 @@ def answerQuery(l, r):
     # Return the answer for this query modulo 1000000007
 
     lettercounts_range = {}
-    max_odd_count = 0
-    max_odd_value = 0
 
     # count the number of times each letter appears in the interval
     for k in alphabet:
@@ -96,31 +94,26 @@ def answerQuery(l, r):
     items = lettercounts_range.items()
     even_letters = filter(lambda x: x[1] % 2 == 0 and x[1] > 0, items)
     odd_letters = filter(lambda x: x[1] % 2 == 1, items)
-    if odd_letters:
-        max_odd_value = max(odd_letters, key=lambda x: x[1])[1]
-        max_odd_items = filter(lambda x: x[1] == max_odd_value, odd_letters)
-        max_odd_count = len(max_odd_items)
 
-    denominator = [x[1] / 2 for x in even_letters]
-    denominator += [max_odd_value / 2]
+    denominator = [x[1] / 2 for x in even_letters] + [x[1] / 2 for x in odd_letters]
 
     answer = combinations(denominator)
-    if max_odd_count > 0:
-        answer *= max_odd_count
+    if len(odd_letters) > 0:
+        answer *= len(odd_letters)
     answer %= 1000000007
 
     return answer
 
 
 if __name__ == '__main__':
-    with open('output04.txt') as handle:
+    with open('output24.txt') as handle:
         answers = handle.read()
         answers = answers.split('\n')
         answers = [int(x.strip()) for x in answers]
 
-    with open('input04.txt') as handle:
+    with open('input24.txt') as handle:
         text = handle.readline().strip()
-        print text
+        #print text
         initialize(text)
         handle.readline() # count
         counter = 0
@@ -136,10 +129,6 @@ if __name__ == '__main__':
             counter += 1
 
     print "done"
-
-
-#    handle = open('input04.txt')
-#    text = handle.readline().strip()
 
 
 class MyTest(unittest.TestCase):
@@ -194,3 +183,12 @@ class MyTest(unittest.TestCase):
         self.assertEqual(60, combinations([1, 2, 3]))
         self.assertEqual(10, combinations([2, 3]))
         self.assertEqual(5, combinations([1, 4]))
+
+    def test_1(self):
+        text = 'daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd'
+        initialize(text)
+        self.assertEqual(2, answerQuery(14, 17))
+        self.assertEqual(2, answerQuery(76, 79))
+        self.assertEqual(2, answerQuery(16, 19))
+        self.assertEqual(2, answerQuery(25, 28))
+        self.assertEqual(2, answerQuery(44, 47))
