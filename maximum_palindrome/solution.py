@@ -31,7 +31,6 @@ from pprint import pprint, pformat
 
 lettercounts = {}
 factorials = {}
-
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 
@@ -58,6 +57,10 @@ def range_lettercount(c, l, r):
 
 def initialize(s):
 
+    global lettercounts
+
+    lettercounts = {}
+
     for l in alphabet:
         lettercounts[l] = [0] * (len(s) + 1)
 
@@ -70,11 +73,22 @@ def initialize(s):
         i += 1
 
 
+def combinations(p):
+    # p is an array of integers
+    numerator = sum(p)
+    denominator_arr = map(factorial, p)
+    denominator = reduce(lambda x, y: x * y, denominator_arr)
+    return factorial(numerator) / denominator
+
+
 def answerQuery(l, r):
     # l, r are 1-based
     # Return the answer for this query modulo 1000000007
 
     lettercounts_range = {}
+    max_odd_count = 0
+    max_odd_value = 0
+
     # count the number of times each letter appears in the interval
     for k in alphabet:
         lettercounts_range[k] = range_lettercount(k, l, r)
@@ -82,33 +96,50 @@ def answerQuery(l, r):
     items = lettercounts_range.items()
     even_letters = filter(lambda x: x[1] % 2 == 0 and x[1] > 0, items)
     odd_letters = filter(lambda x: x[1] % 2 == 1, items)
-    max_odd_value = max(odd_letters, key=lambda x: x[1])[1]
-    max_odd_items = filter(lambda x: x[1] == max_odd_value, odd_letters)
-    pprint(lettercounts_range)
-    pprint(even_letters)
-    pprint(odd_letters)
-    print max_odd_value
-    print max_odd_items
-    max_odd_count = len(max_odd_items)
-    print max_odd_count
+    if odd_letters:
+        max_odd_value = max(odd_letters, key=lambda x: x[1])[1]
+        max_odd_items = filter(lambda x: x[1] == max_odd_value, odd_letters)
+        max_odd_count = len(max_odd_items)
 
     denominator = [x[1] / 2 for x in even_letters]
     denominator += [max_odd_value / 2]
-    print denominator
 
-    numerator = factorial(r - l + 1)
-    denominator = [factorial(x) for x in denominator]
-
-    print numerator
-    print denominator
-    denominator = reduce(lambda x, y: x * y, denominator)
-
-    answer = numerator / denominator
-    answer *= max_odd_count
+    answer = combinations(denominator)
+    if max_odd_count > 0:
+        answer *= max_odd_count
     answer %= 1000000007
 
-    print answer
     return answer
+
+
+if __name__ == '__main__':
+    with open('output04.txt') as handle:
+        answers = handle.read()
+        answers = answers.split('\n')
+        answers = [int(x.strip()) for x in answers]
+
+    with open('input04.txt') as handle:
+        text = handle.readline().strip()
+        print text
+        initialize(text)
+        handle.readline() # count
+        counter = 0
+        for line in handle:
+            bounds = line.strip().split(' ')
+            bounds = map(int, bounds)
+            answer = answerQuery(bounds[0], bounds[1])
+            if answer != answers[counter]:
+                print "mismatch:  got %s, expected %s, bounds [%s, %s]" % (
+                    answer, answers[counter], bounds[0], bounds[1]
+                )
+                print "text = |%s|" % text[(bounds[0] - 1):bounds[1]]
+            counter += 1
+
+    print "done"
+
+
+#    handle = open('input04.txt')
+#    text = handle.readline().strip()
 
 
 class MyTest(unittest.TestCase):
@@ -135,14 +166,31 @@ class MyTest(unittest.TestCase):
         self.assertEqual(1, factorial(1))
         self.assertEqual(720, factorial(6))
 
-    def test_example(self):
+    def test_example_1(self):
         text = 'madamimadam'
         initialize(text)
         result = answerQuery(4, 7)
         self.assertEqual(2, result)
 
+    def test_example_2(self):
+        text = 'week'
+        initialize(text)
+        self.assertEqual(2, answerQuery(1, 4))
+        self.assertEqual(1, answerQuery(2, 3))
+
+    def test_another(self):
+        text = 'abbccabbcc'
+        initialize(text)
+        self.assertEqual(30, answerQuery(1, 10))
+
     def test_answerQuery(self):
         text = 'whathathgodwroughtjjj'
         initialize(text)
-        print text[3:11]
         answerQuery(4, 11)
+
+    def test_combinations(self):
+        self.assertEqual(2, combinations([1, 1]))
+        self.assertEqual(30, combinations([1, 2, 2]))
+        self.assertEqual(60, combinations([1, 2, 3]))
+        self.assertEqual(10, combinations([2, 3]))
+        self.assertEqual(5, combinations([1, 4]))
