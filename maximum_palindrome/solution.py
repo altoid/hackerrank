@@ -96,17 +96,15 @@ def initialize(s):
 
 
 def power(x, n):
-    """
-    raise x to the power n modulo MODULUS.
-    """
+    result = 1
+    while n:
+        if n & 1:
+            result = result * x % MODULUS
 
-    if n == 1:
-        return x
+        x = x * x % MODULUS
+        n >>= 1
 
-    if n % 2 == 0:
-        return power(x * x % MODULUS, n // 2)
-
-    return x * power(x * x % MODULUS, (n - 1) // 2) % MODULUS
+    return result
 
 
 def inverse(x):
@@ -162,12 +160,12 @@ def answerQuery(l, r):
 
 
 if __name__ == '__main__':
-    with open('output04.txt') as handle:
+    with open('output24.txt') as handle:
         answers = handle.read()
         answers = answers.split('\n')
         answers = [int(x.strip()) for x in answers]
 
-    with open('input04.txt') as handle:
+    with open('input24.txt') as handle:
         text = handle.readline().strip()
         #print text
         initialize(text)
