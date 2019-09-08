@@ -33,6 +33,7 @@ import math
 lettercounts = {}
 factorials = {}
 combos = {}
+inverses = {}
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 MODULUS = 1000000007
 
@@ -91,6 +92,7 @@ def initialize(s):
 
     lettercounts = local_lettercounts
 #    pprint(lettercounts)
+    #print "done initializing"
 
 
 def power(x, n):
@@ -107,15 +109,29 @@ def power(x, n):
     return x * power(x * x % MODULUS, (n - 1) // 2) % MODULUS
 
 
+def inverse(x):
+    """
+
+    :param x:
+    :return: the multiplicative inverse of x modulo MODULUS
+    """
+    if x not in inverses:
+        result = power(x, MODULUS - 2)
+        inverses[x] = result
+
+    return inverses[x]
+
+
 def combinations(p):
     # p is an array of integers
 
     t = tuple(sorted(p))
     if t not in combos:
         numerator = sum(t)
-        denominator_arr = map(factorial, t)
-        denominator = reduce(lambda x, y: x * y, denominator_arr)
-        result = factorial(numerator) / denominator
+        temp_arr = map(factorial, t)
+        temp_arr = map(inverse, temp_arr)
+        result = reduce(lambda x, y: x * y, temp_arr)
+        result = factorial(numerator) * result
         result %= MODULUS
         combos[t] = result
 
@@ -161,7 +177,7 @@ if __name__ == '__main__':
         for line in handle:
             bounds = line.strip().split(' ')
             bounds = map(int, bounds)
-            print "[%s, %s]" % (bounds[0], bounds[1])
+            #print "[%s, %s]" % (bounds[0], bounds[1])
             answer = answerQuery(bounds[0], bounds[1])
             if answer != answers[counter]:
                 print "mismatch:  got %s, expected %s, bounds [%s, %s]" % (
