@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-# idea:  given the subrange, tally the letters in it.  a palindrome would consist
-# optionally of letters which appear an even number of times, and optionally an additional letter that appears
-# an odd number of times.
+# idea:  given the subrange, tally the letters in it.  each half of the palindrome would consist of half of all of
+# the letters that appear more than once, plus (in the middle) one letter that appears an odd number of times.
+# for every letter that appears an odd number of times there is a different palindrome, where the middle letter is
+# that odd-appearing letter.
 #
 # suppose we have
 #
@@ -121,12 +122,11 @@ def inverse(x):
     return inverses[x]
 
 
-def combinations(p):
+def combinations(numerator, denominator):
     # p is an array of integers
 
-    t = tuple(sorted(p))
+    t = tuple(sorted(denominator))
     if t not in combos:
-        numerator = sum(t)
         temp_arr = map(lambda x: inverse(factorial(x)), t)
         result = reduce(lambda x, y: x * y, temp_arr)
         result = factorial(numerator) * result
@@ -151,8 +151,9 @@ def answerQuery(l, r):
     odd_letters = filter(lambda x: x[1] % 2 == 1, items)
 
     denominator = [x[1] / 2 for x in even_letters] + [x[1] / 2 for x in odd_letters]
+    numerator = sum(denominator)
 
-    answer = combinations(denominator)
+    answer = combinations(numerator, denominator)
     if len(odd_letters) > 1:
         answer *= len(odd_letters)
         answer %= MODULUS
@@ -161,12 +162,12 @@ def answerQuery(l, r):
 
 
 if __name__ == '__main__':
-    with open('output24.txt') as handle:
+    with open('output04.txt') as handle:
         answers = handle.read()
         answers = answers.split('\n')
         answers = [int(x.strip()) for x in answers]
 
-    with open('input24.txt') as handle:
+    with open('input04.txt') as handle:
         text = handle.readline().strip()
         #print text
         initialize(text)
