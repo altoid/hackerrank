@@ -32,12 +32,15 @@ import math
 
 lettercounts = {}
 factorials = {}
+combos = {}
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
+MODULUS = 1000000007
 
 
 def factorial(n):
     if n not in factorials:
-        factorials[n] = math.factorial(n)
+        print "factorial(%s)" % n
+        factorials[n] = math.factorial(n) % MODULUS
 
     return factorials[n]
 
@@ -49,6 +52,12 @@ def range_lettercount(c, l, r):
 
 
 def initialize(s):
+
+    global factorials
+
+    factorials[0] = 1
+    for i in xrange(1, 50000):
+        factorials[i] = i * factorials[i - 1]
 
     global lettercounts
     local_lettercounts = {}
@@ -73,23 +82,44 @@ def initialize(s):
         counter = 1
         l = 0
         while l < len(indices) - 1:
-            for j in range(indices[l], indices[l + 1]):
+            for j in xrange(indices[l], indices[l + 1]):
                 local_lettercounts[k][j] = counter
             counter += 1
             l += 1
-        for j in range(indices[l], len(s) + 1):
+        for j in xrange(indices[l], len(s) + 1):
             local_lettercounts[k][j] = counter
 
     lettercounts = local_lettercounts
 #    pprint(lettercounts)
 
 
+def power(x, n):
+    """
+    raise x to the power n modulo MODULUS.
+    """
+
+    if n == 1:
+        return x % MODULUS
+
+    if n % 2 == 0:
+        return power(x * x % MODULUS, n // 2)
+
+    return x * power(x * x % MODULUS, (n - 1) // 2) % MODULUS
+
+
 def combinations(p):
     # p is an array of integers
-    numerator = sum(p)
-    denominator_arr = map(factorial, p)
-    denominator = reduce(lambda x, y: x * y, denominator_arr)
-    return factorial(numerator) / denominator
+
+    t = tuple(sorted(p))
+    if t not in combos:
+        numerator = sum(t)
+        denominator_arr = map(factorial, t)
+        denominator = reduce(lambda x, y: x * y, denominator_arr)
+        result = factorial(numerator) / denominator
+        result %= MODULUS
+        combos[t] = result
+
+    return combos[t]
 
 
 def answerQuery(l, r):
@@ -111,7 +141,7 @@ def answerQuery(l, r):
     answer = combinations(denominator)
     if len(odd_letters) > 0:
         answer *= len(odd_letters)
-    answer %= 1000000007
+        answer %= MODULUS
 
     return answer
 
@@ -131,6 +161,7 @@ if __name__ == '__main__':
         for line in handle:
             bounds = line.strip().split(' ')
             bounds = map(int, bounds)
+            print "[%s, %s]" % (bounds[0], bounds[1])
             answer = answerQuery(bounds[0], bounds[1])
             if answer != answers[counter]:
                 print "mismatch:  got %s, expected %s, bounds [%s, %s]" % (
