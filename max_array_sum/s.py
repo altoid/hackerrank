@@ -3,23 +3,29 @@
 import unittest
 from pprint import pprint
 
-def subsets(arr):
+def subsets_helper(arr):
+    yield [arr[0]]
+
     if len(arr) == 1:
-        yield [arr[0]]
         return
 
     if len(arr) == 2:
-        yield [arr[0]]
         yield [arr[1]]
+        yield arr
         return
 
-    yield [arr[0]]
-
-    for s in subsets(arr[2:]):
+    for s in subsets_helper(arr[1:]):
         yield [arr[0]] + s
 
-    for s in subsets(arr[1:]):
+    for s in subsets_helper(arr[1:]):
         yield s
+
+def subsets(arr):
+    for s in subsets_helper(arr):
+        yield s
+
+    yield []
+
 
 def solution(arr):
     # assumes there is at least 1 element in the array
