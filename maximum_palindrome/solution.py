@@ -40,7 +40,6 @@ MODULUS = 1000000007
 
 def factorial(n):
     if n not in factorials:
-        print "factorial(%s)" % n
         factorials[n] = math.factorial(n) % MODULUS
 
     return factorials[n]
@@ -101,7 +100,7 @@ def power(x, n):
     """
 
     if n == 1:
-        return x % MODULUS
+        return x
 
     if n % 2 == 0:
         return power(x * x % MODULUS, n // 2)
@@ -128,8 +127,7 @@ def combinations(p):
     t = tuple(sorted(p))
     if t not in combos:
         numerator = sum(t)
-        temp_arr = map(factorial, t)
-        temp_arr = map(inverse, temp_arr)
+        temp_arr = map(lambda x: inverse(factorial(x)), t)
         result = reduce(lambda x, y: x * y, temp_arr)
         result = factorial(numerator) * result
         result %= MODULUS
@@ -155,7 +153,7 @@ def answerQuery(l, r):
     denominator = [x[1] / 2 for x in even_letters] + [x[1] / 2 for x in odd_letters]
 
     answer = combinations(denominator)
-    if len(odd_letters) > 0:
+    if len(odd_letters) > 1:
         answer *= len(odd_letters)
         answer %= MODULUS
 
