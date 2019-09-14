@@ -126,7 +126,7 @@ def combinations(numerator, denominator):
     t = tuple(sorted(denominator))
     if t not in combos:
         temp_arr = map(lambda x: inverse(factorial(x)), t)
-        result = reduce(lambda x, y: x * y, temp_arr)
+        result = reduce(lambda x, y: x * y % MODULUS, temp_arr)
         result = factorial(numerator) * result
         result %= MODULUS
         combos[t] = result
@@ -238,6 +238,13 @@ class MyTest(unittest.TestCase):
         self.assertEqual(60, combinations([1, 2, 3]))
         self.assertEqual(10, combinations([2, 3]))
         self.assertEqual(5, combinations([1, 4]))
+
+    def test_combinations_2(self):
+        numerator = 100000
+        denominator = [3846] * 25 + [3850]
+        result = combinations(numerator, denominator)
+        print result
+
 
     def test_1(self):
         text = 'daadabbadcabacbcccbdcccdbcccbbaadcbabbdaaaabbbdabdbbdcadaaacaadadacddabbbbbdcccbaabbbacacddbbbcbbdbd'
