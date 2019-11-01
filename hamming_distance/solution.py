@@ -11,6 +11,12 @@ bitcounts = {}
 MASKWIDTH = 16
 MASK = 2 ** MASKWIDTH - 1
 
+M1 = 0xffff
+M2 = M1 << 16
+M3 = M2 << 16
+M4 = M3 << 16
+
+
 def countbits_kernighan(n):
     """
     :param n: unsigned number
@@ -27,16 +33,13 @@ def countbits_kernighan(n):
 def countbits_godawful(n):
     c = 0
 
-    m1 = 0xffff
-    m2 = m1 << 16
-    m3 = m2 << 16
-    m4 = m3 << 16
-
     while n:
-        v1 = n & m1
-        v2 = (n & m2) >> 16
-        v3 = (n & m3) >> 32
-        v4 = (n & m4) >> 48
+        h = n & 0xffffffffffffffff
+
+        v1 = h & M1
+        v2 = (h & M2) >> 16
+        v3 = (h & M3) >> 32
+        v4 = (h & M4) >> 48
 
         c += bitcounts[v1]
         c += bitcounts[v2]
