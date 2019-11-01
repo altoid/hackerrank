@@ -27,9 +27,23 @@ def countbits_kernighan(n):
 def countbits_godawful(n):
     c = 0
 
+    m1 = 0xffff
+    m2 = m1 << 16
+    m3 = m2 << 16
+    m4 = m3 << 16
+
     while n:
-        c += bitcounts[n & MASK]
-        n >>= MASKWIDTH
+        v1 = n & m1
+        v2 = (n & m2) >> 16
+        v3 = (n & m3) >> 32
+        v4 = (n & m4) >> 48
+
+        c += bitcounts[v1]
+        c += bitcounts[v2]
+        c += bitcounts[v3]
+        c += bitcounts[v4]
+
+        n >>= 64
 
     return c
 
