@@ -8,6 +8,9 @@ import fileinput
 bitcounts = {}
 
 
+MASKWIDTH = 16
+MASK = 2 ** MASKWIDTH - 1
+
 def countbits_kernighan(n):
     """
     :param n: unsigned number
@@ -25,8 +28,8 @@ def countbits_godawful(n):
     c = 0
 
     while n:
-        c += bitcounts[n & 0xff]
-        n >>= 8
+        c += bitcounts[n & MASK]
+        n >>= MASKWIDTH
 
     return c
 
@@ -90,7 +93,7 @@ def swap(s, l1, r1, l2, r2):
 
 if __name__ == '__main__':
 
-    for i in xrange(256):
+    for i in xrange(2 ** MASKWIDTH):
         bitcounts[i] = countbits_kernighan(i)
 
     fi = fileinput.FileInput()
