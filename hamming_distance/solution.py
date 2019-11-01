@@ -25,18 +25,7 @@ def countbits(n):
     return c
 
 
-def string_to_int(s):
-    s1 = s.replace('a', '0')
-    s1 = s1.replace('b', '1')
-    return int(s1, base=2)
-
-
-def hamming_distance(s1, s2):
-    if len(s1) != len(s2):
-        raise ValueError("strings not same length")
-
-    n1 = string_to_int(s1)
-    n2 = string_to_int(s2)
+def hamming_distance(n1, n2):
     return countbits(n1 ^ n2)
 
 
@@ -70,8 +59,10 @@ def change(s, l, r, c):
     string will never be ''
     """
 
+    replacement_c = '0' if c == 'a' else '1'
+
     first, _, right = lyse(s, l, r)
-    middle = c * (r - l + 1)
+    middle = replacement_c * (r - l + 1)
     return first + middle + right
 
 
@@ -93,7 +84,7 @@ if __name__ == '__main__':
     # throw away first line
     fi.readline()
 
-    s = fi.readline().strip()
+    s = fi.readline().strip().replace('a', '0').replace('b', '1')
 
     # throw away next line
     fi.readline()
@@ -111,32 +102,36 @@ if __name__ == '__main__':
             c = rest[2]
             s = change(s, l, r, c)
 
-        if cmd == 'S':
+        elif cmd == 'S':
             l1 = int(rest[0])
             r1 = int(rest[1])
             l2 = int(rest[2])
             r2 = int(rest[3])
             s = swap(s, l1, r1, l2, r2)
 
-        if cmd == 'R':
+        elif cmd == 'R':
             l = int(rest[0])
             r = int(rest[1])
             s = reverse(s, l, r)
 
-        if cmd == 'W':
+        elif cmd == 'W':
             l = int(rest[0])
             r = int(rest[1])
             _, middle, _ = lyse(s, l, r)
-            print middle
+            print middle.replace('0', 'a').replace('1', 'b')
 
-        if cmd == 'H':
+        elif cmd == 'H':
             l1 = int(rest[0])
             l2 = int(rest[1])
             length = int(rest[2])
 
             _, part1, _ = lyse(s, l1, l1 + length - 1)
             _, part2, _ = lyse(s, l2, l2 + length - 1)
-            d = hamming_distance(part1, part2)
+
+            n1 = int(part1, base=2)
+            n2 = int(part2, base=2)
+
+            d = hamming_distance(n1, n2)
             print d
 
         cmdline = fi.readline().strip()
@@ -196,33 +191,4 @@ class MyTest(unittest.TestCase):
         self.assertEqual(111, countbits(2 ** 111 - 1))
 
         self.assertEqual(3, countbits(2 ** 111 + 2 ** 9 + 2 ** 5))
-
-    def test_string_to_int(self):
-        self.assertEqual(0, string_to_int(''))
-
-        self.assertEqual(0, string_to_int('a'))
-        self.assertEqual(0, string_to_int('aa'))
-        self.assertEqual(0, string_to_int('aaa'))
-        self.assertEqual(0, string_to_int('aaaa'))
-        self.assertEqual(0, string_to_int('aaaaa'))
-        self.assertEqual(0, string_to_int('aaaaaa'))
-        self.assertEqual(0, string_to_int('aaaaaaa'))
-        self.assertEqual(0, string_to_int('aaaaaaaa'))
-
-        self.assertEqual(1, string_to_int('b'))
-        self.assertEqual(2, string_to_int('ba'))
-        self.assertEqual(4, string_to_int('baa'))
-        self.assertEqual(8, string_to_int('baaa'))
-        self.assertEqual(16, string_to_int('baaaa'))
-        self.assertEqual(32, string_to_int('baaaaa'))
-        self.assertEqual(64, string_to_int('baaaaaa'))
-        self.assertEqual(128, string_to_int('baaaaaaa'))
-        self.assertEqual(256, string_to_int('baaaaaaaa'))
-
-    def test_hamming_distance(self):
-        self.assertEqual(0, hamming_distance('ababababababa', 'ababababababa'))
-
-        self.assertEqual(2, hamming_distance('abbbbb', 'babbbb'))
-        self.assertEqual(1, hamming_distance('abbbbb', 'bbbbbb'))
-        self.assertEqual(5, hamming_distance('aaaaa', 'bbbbb'))
 
