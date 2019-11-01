@@ -4,7 +4,11 @@ import unittest
 import fileinput
 
 
-def countbits(n):
+# maps 0-255 to the number of bits in each of these numbers
+bitcounts = {}
+
+
+def countbits_kernighan(n):
     """
     :param n: unsigned number
     :return: number of bits set in n
@@ -15,6 +19,20 @@ def countbits(n):
         c += 1
         n &= (n - 1)
     return c
+
+
+def countbits_godawful(n):
+    c = 0
+
+    while n:
+        c += bitcounts[n & 0xff]
+        n >>= 8
+
+    return c
+
+
+def countbits(n):
+    return countbits_godawful(n)
 
 
 def hamming_distance(n1, n2):
@@ -71,6 +89,10 @@ def swap(s, l1, r1, l2, r2):
 
 
 if __name__ == '__main__':
+
+    for i in xrange(256):
+        bitcounts[i] = countbits_kernighan(i)
+
     fi = fileinput.FileInput()
 
     # throw away first line
