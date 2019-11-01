@@ -10,43 +10,6 @@ convert character string to bit vector
 
 """
 
-string_2_nibble = {
-    'a': 0,
-    'b': 1,
-
-    'aa': 0,
-    'ab': 1,
-    'ba': 2,
-    'bb': 3,
-
-    'aaa': 0,
-    'aab': 1,
-    'aba': 2,
-    'abb': 3,
-    'baa': 4,
-    'bab': 5,
-    'bba': 6,
-    'bbb': 7,
-
-    'aaaa': 0,
-    'aaab': 1,
-    'aaba': 2,
-    'aabb': 3,
-    'abaa': 4,
-    'abab': 5,
-    'abba': 6,
-    'abbb': 7,
-    'baaa': 8,
-    'baab': 9,
-    'baba': 10,
-    'babb': 11,
-    'bbaa': 12,
-    'bbab': 13,
-    'bbba': 14,
-    'bbbb': 15,
-}
-
-
 def countbits(n):
     """
     :param n: unsigned number
@@ -63,17 +26,9 @@ def countbits(n):
 
 
 def string_to_int(s):
-    result = 0
-    prefix_length = len(s) % 4
-    if prefix_length:
-        prefix = s[:prefix_length]
-        result = string_2_nibble[prefix]
-    ptr = prefix_length
-    while ptr < len(s):
-        snippet = s[ptr:(ptr + 4)]
-        result = result * 16 + string_2_nibble[snippet]
-        ptr += 4
-    return result
+    s1 = s.replace('a', '0')
+    s1 = s1.replace('b', '1')
+    return int(s1, base=2)
 
 
 def hamming_distance(s1, s2):
