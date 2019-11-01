@@ -131,6 +131,7 @@ def swap(s, l1, r1, l2, r2):
     middle = s[r1:(l2 - 1)]
     return left_prefix + right_part + middle + left_part + right_suffix
 
+
 if __name__ == '__main__':
     fi = fileinput.FileInput()
 
