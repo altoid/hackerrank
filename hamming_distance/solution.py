@@ -3,23 +3,19 @@
 import unittest
 import fileinput
 
-"""
-convert character string to bit vector
-
-# of bits in a number
-
-"""
 
 def countbits(n):
     """
     :param n: unsigned number
     :return: number of bits set in n
     """
+
     if n == 0:
         return 0
 
     c = 1
-    while n & (n - 1):
+    n = n & (n - 1)
+    while n:
         c += 1
         n = n & (n - 1)
     return c
@@ -85,9 +81,13 @@ if __name__ == '__main__':
     fi.readline()
 
     s = fi.readline().strip().replace('a', '0').replace('b', '1')
+    s_int = int(s, base=2)
 
     # throw away next line
     fi.readline()
+
+    # map length to mask
+    masks = {}
 
     # now read the commands
     cmdline = fi.readline().strip()
@@ -101,6 +101,7 @@ if __name__ == '__main__':
             r = int(rest[1])
             c = rest[2]
             s = change(s, l, r, c)
+            s_int = int(s, base=2)
 
         elif cmd == 'S':
             l1 = int(rest[0])
@@ -108,11 +109,13 @@ if __name__ == '__main__':
             l2 = int(rest[2])
             r2 = int(rest[3])
             s = swap(s, l1, r1, l2, r2)
+            s_int = int(s, base=2)
 
         elif cmd == 'R':
             l = int(rest[0])
             r = int(rest[1])
             s = reverse(s, l, r)
+            s_int = int(s, base=2)
 
         elif cmd == 'W':
             l = int(rest[0])
@@ -124,12 +127,14 @@ if __name__ == '__main__':
             l1 = int(rest[0])
             l2 = int(rest[1])
             length = int(rest[2])
+            len_s = len(s)
 
-            _, part1, _ = lyse(s, l1, l1 + length - 1)
-            _, part2, _ = lyse(s, l2, l2 + length - 1)
+            if length not in masks:
+                masks[length] = (1 << length) - 1
+            mask = masks[length]
 
-            n1 = int(part1, base=2)
-            n2 = int(part2, base=2)
+            n1 = (s_int >> (len_s - (l1 + length - 1))) & mask
+            n2 = (s_int >> (len_s - (l2 + length - 1))) & mask
 
             d = hamming_distance(n1, n2)
             print d
