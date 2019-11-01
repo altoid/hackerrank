@@ -10,14 +10,10 @@ def countbits(n):
     :return: number of bits set in n
     """
 
-    if n == 0:
-        return 0
-
-    c = 1
-    n = n & (n - 1)
+    c = 0
     while n:
         c += 1
-        n = n & (n - 1)
+        n &= (n - 1)
     return c
 
 
