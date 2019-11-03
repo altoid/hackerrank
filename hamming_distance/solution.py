@@ -6,10 +6,7 @@ import fileinput
 
 # maps 0-255 to the number of bits in each of these numbers
 bitcounts = {}
-
-
 MASKWIDTH = 16
-MASK = 2 ** MASKWIDTH - 1
 
 M1 = 0xffff
 M2 = M1 << 16
@@ -36,17 +33,15 @@ def countbits_godawful(n):
     while n:
         h = n & 0xffffffffffffffff
 
-        v1 = h & M1
-        v2 = (h & M2) >> 16
-        v3 = (h & M3) >> 32
-        v4 = (h & M4) >> 48
-
-        c += bitcounts[v1]
-        c += bitcounts[v2]
-        c += bitcounts[v3]
-        c += bitcounts[v4]
+        c += bitcounts[h & M1]
+        c += bitcounts[(h & M2) >> 16]
+        c += bitcounts[(h & M3) >> 32]
+        c += bitcounts[(h & M4) >> 48]
 
         n >>= 64
+
+        # even if all this does is shift, no computation, it takes too long.  i think there is no way
+        # to do this in python.
 
     return c
 
