@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
 import unittest
+import random
+
 import fileinput
 
 
 # maps 0-255 to the number of bits in each of these numbers
 bitcounts = {}
+bitcounts_64 = {}
 MASKWIDTH = 16
 
 M1 = 0xffff
@@ -30,20 +33,43 @@ def countbits_kernighan(n):
 def countbits_godawful(n):
     c = 0
 
+    shiftsize = 1024
+    mask = (1 << shiftsize) - 1
+
     while n:
-        h = n & 0xffffffffffffffff
+        h = n & mask
 
-        c += bitcounts[h & M1]
-        c += bitcounts[(h & M2) >> 16]
-        c += bitcounts[(h & M3) >> 32]
-        c += bitcounts[(h & M4) >> 48]
+        c += sum([countbits_64(x) for x in pieces(h, shiftsize, 64)])
 
-        n >>= 64
+        n >>= shiftsize
 
-        # even if all this does is shift, no computation, it takes too long.  i think there is no way
+        # even if all this does is shift, no computation, it takes too long (30s for case 11).  i think there is no way
         # to do this in python.
 
+        # case 11:
+        # shifting by 64:  30s
+        # shifting by 1024:  5s
+        # by 2048:  4.1s
+
     return c
+
+
+def countbits_64(n):
+    """
+    count the bits in n, where n is at most 64 bits long
+    :param n:
+    :return:
+    """
+    if n not in bitcounts_64:
+        c = 0
+
+        c += bitcounts[n & M1]
+        c += bitcounts[(n & M2) >> 16]
+        c += bitcounts[(n & M3) >> 32]
+        c += bitcounts[(n & M4) >> 48]
+        bitcounts_64[n] = c
+
+    return bitcounts_64[n]
 
 
 def countbits(n):
@@ -101,6 +127,29 @@ def swap(s, l1, r1, l2, r2):
     _, right_part, right_suffix = lyse(s, l2, r2)
     middle = s[r1:(l2 - 1)]
     return left_prefix + right_part + middle + left_part + right_suffix
+
+
+def pieces(v, n, k):
+    """
+    v is an n-bit number.  break it up into pieces of k bits each.
+
+    generate masks for an n-bit number, k bits at a time.  n has to be a multiple of k and both have to
+    be powers of 2.
+
+    :param v:
+    :param n:
+    :param k:
+    :return:
+    """
+
+    npieces = n / k
+    mask = 2 ** k - 1
+    i = 0
+    while i < npieces:
+        p = v & mask
+        yield p
+        v >>= k
+        i += 1
 
 
 if __name__ == '__main__':
@@ -172,6 +221,9 @@ if __name__ == '__main__':
             d = hamming_distance(n1, n2)
             print d
 
+            # case 8 - 0.9s
+            # case 11 - 53s
+
         cmdline = fi.readline().strip()
 
 
@@ -230,3 +282,15 @@ class MyTest(unittest.TestCase):
 
         self.assertEqual(3, countbits(2 ** 111 + 2 ** 9 + 2 ** 5))
 
+    def test_masks(self):
+        for m in masks(128, 8):
+            print bin(m)
+
+    def test_pieces(self):
+        n = 128
+        k = 16
+        v = random.randint(0, 2 ** n - 1)
+        bits = [x for x in pieces(v, n, k)]
+        print bin(v)
+        for b in bits:
+            print bin(b)
