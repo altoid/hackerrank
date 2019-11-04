@@ -9,7 +9,13 @@ import fileinput
 import sys
 
 
+dont_bother = set()
+
+
 def helper(partial, passwords, loginAttempt):
+    if loginAttempt in dont_bother:
+        return []
+
     if not loginAttempt:
         return partial
 
@@ -19,6 +25,7 @@ def helper(partial, passwords, loginAttempt):
         if loginAttempt.startswith(p):
             trythese.append(p)
     if not trythese:
+        dont_bother.add(loginAttempt)
         return []
 
     for p in trythese:
@@ -26,6 +33,7 @@ def helper(partial, passwords, loginAttempt):
         if result:
             return result
 
+    dont_bother.add(loginAttempt)
     return []
 
 
@@ -37,12 +45,7 @@ def passwordCracker(passwords, loginAttempt):
     :return: string that is the selection of passwords from passwords that was concatenated to make loginAttempt
     """
 
-    # # make sure the characters in attempt appear in the passwords
-    # set1 = set(loginAttempt)
-    # set2 = set(''.join(passwords))
-    # if not set1.issubset(set2):
-    #     return 'WRONG PASSWORD'
-
+    dont_bother.clear()
     partial = []
     result = helper(partial, passwords, loginAttempt)
     if result:

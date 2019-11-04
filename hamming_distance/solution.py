@@ -30,7 +30,39 @@ def countbits_kernighan(n):
     return c
 
 
-def countbits_godawful(n):
+def countbits_64(n):
+    """
+    count the bits in n, where n is at most 64 bits long
+    :param n:
+    :return:
+    """
+    if n not in bitcounts_64:
+        c = 0
+
+        c += bitcounts[n & M1]
+        c += bitcounts[(n & M2) >> 16]
+        c += bitcounts[(n & M3) >> 32]
+        c += bitcounts[(n & M4) >> 48]
+        bitcounts_64[n] = c
+
+    return bitcounts_64[n]
+
+
+def countbits_noloop(n):
+    # 2.5 times slower than countbits_loop
+    c = 0
+
+    if n:
+        nbits = n.bit_length()
+
+        # round up nbits to nearest multiple of 64
+        nbits = ((nbits + 63) / 64) * 64
+        c = sum([countbits_64(x) for x in pieces(n, nbits, 64)])
+
+    return c
+
+
+def countbits_loop(n):
     c = 0
 
     shiftsize = 1024
@@ -54,26 +86,9 @@ def countbits_godawful(n):
     return c
 
 
-def countbits_64(n):
-    """
-    count the bits in n, where n is at most 64 bits long
-    :param n:
-    :return:
-    """
-    if n not in bitcounts_64:
-        c = 0
-
-        c += bitcounts[n & M1]
-        c += bitcounts[(n & M2) >> 16]
-        c += bitcounts[(n & M3) >> 32]
-        c += bitcounts[(n & M4) >> 48]
-        bitcounts_64[n] = c
-
-    return bitcounts_64[n]
-
-
 def countbits(n):
-    return countbits_godawful(n)
+    return countbits_loop(n)
+    # return countbits_noloop(n)
 
 
 def hamming_distance(n1, n2):
