@@ -4,9 +4,8 @@
 # https://www.hackerrank.com/challenges/password-cracker/problem
 
 import unittest
-
-import fileinput
 import sys
+import fileinput
 
 
 dont_bother = set()
