@@ -48,7 +48,11 @@ def prefix_expansion_length(stree, node, arc, acc):
 
     result = l * (l + 1) / 2 + acc * l
     acc += l
-    for c in next_node.children.keys():
+
+    # this sorts the arcs by first character on the label
+    keys = sorted(next_node.children.keys(), key=lambda x: stree.text[x[0]])
+
+    for c in keys:
         result += prefix_expansion_length(stree, next_node, c, acc)
     return result
 
@@ -60,7 +64,11 @@ def substring_expansion_length(stree):
     """
 
     total = 0
-    for c in stree.root.children.keys():
+
+    # this sorts the arcs by first character on the label
+    keys = sorted(stree.root.children.keys(), key=lambda x: stree.text[x[0]])
+
+    for c in keys:
         total += prefix_expansion_length(stree, stree.root, c, 0)
     return total
 
