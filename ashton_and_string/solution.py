@@ -73,12 +73,7 @@ def substring_expansion_length(stree):
     return total
 
 
-pos = 200
-
-
-def naive_expansion_helper(stree, node, arc, acc):
-    global pos
-
+def naive_expansion_helper(stree, node, arc, acc, pos):
     label = stree.get_arc_label(arc)
     next_node = node.children[arc]
     if next_node.is_leaf():
@@ -93,13 +88,14 @@ def naive_expansion_helper(stree, node, arc, acc):
 
     keys = sorted(next_node.children.keys(), key=lambda x: stree.text[x[0]])
     for arc in keys:
-        naive_expansion_helper(stree, next_node, arc, acc + label)
+        pos = naive_expansion_helper(stree, next_node, arc, acc + label, pos)
+    return pos
 
 
-def naive_expansion(stree):
+def naive_expansion(stree, pos):
     keys = sorted(stree.root.children.keys(), key=lambda x: stree.text[x[0]])
     for arc in keys:
-        naive_expansion_helper(stree, stree.root, arc, '')
+        pos = naive_expansion_helper(stree, stree.root, arc, '', pos)
 
 
 class MyTest(unittest.TestCase):
@@ -138,7 +134,7 @@ class MyTest(unittest.TestCase):
     def test_find_char_in_expansion(self):
         t = SuffixTree("mississippi")
         t.build_tree()
-        naive_expansion(t)
+        naive_expansion(t, 262)
         #print e
 
 
