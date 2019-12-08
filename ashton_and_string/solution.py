@@ -73,6 +73,74 @@ def substring_expansion_length(stree):
     return total
 
 
+def char_in_expansion_helper(stree, node, pos, acc):
+    keys = sorted(node.children.keys(), key=lambda x: stree.text[x[0]])
+
+    for arc in keys:
+        pel = prefix_expansion_length(stree, node, arc, acc)
+        if pos < pel:
+            # we found the subtree to look in.  look along the path we have traversed so far, including this edge.
+
+            # continue the prefix expansion by taking the prefix along the path into <node>, and appending
+            # the chars on this edge.
+
+            prefix_length = acc
+            arc_length = stree.arc_length(arc)
+            if node[arc].is_leaf():
+                arc_length -= 1  # lop off the $
+
+            c = 1
+            while c <= arc_length:
+                increment = acc + c
+                if pos <= prefix_length + increment:
+                    break
+                c += 1
+                prefix_length += increment
+            if c <= arc_length:
+                # found it in the prefix expansion that ends with char c on this edge.
+                # we know c, acc, pos, prefix_length
+
+                pass
+            else:
+                # we have to look down child nodes
+                pass
+
+            break
+
+        pos -= pel
+
+
+def naive_expansion_helper(stree, node, arc, acc):
+    label = stree.get_arc_label(arc)
+    next_node = node.children[arc]
+    if next_node.is_leaf():
+        label = label[:-1]
+
+    for i in xrange(len(label)):
+        print acc + label[:i + 1]
+
+    keys = sorted(next_node.children.keys(), key=lambda x: stree.text[x[0]])
+    for arc in keys:
+        naive_expansion_helper(stree, next_node, arc, acc + label)
+
+
+def naive_expansion(stree):
+    keys = sorted(stree.root.children.keys(), key=lambda x: stree.text[x[0]])
+    for arc in keys:
+        naive_expansion_helper(stree, stree.root, arc, '')
+
+
+def char_in_expansion(stree, pos):
+    """
+    find the character at position <pos> in the substring expansion of stree.
+    :param stree:
+    :param pos: position in expansion, 0-based.
+    :return:
+    """
+
+    return char_in_expansion_helper(stree, stree.root, pos, 0)
+
+
 class MyTest(unittest.TestCase):
     def test_empty_tree(self):
         # make sure that we can build, traverse, show, and search a suffix tree constructed with the empty string.
@@ -105,6 +173,12 @@ class MyTest(unittest.TestCase):
         t = SuffixTree("mississippi")
         t.build_tree()
         self.assertEqual(263, substring_expansion_length(t))
+
+    def test_find_char_in_expansion(self):
+        t = SuffixTree("mississippi")
+        t.build_tree()
+        naive_expansion(t)
+        #print e
 
 
 if __name__ == '__main__':
