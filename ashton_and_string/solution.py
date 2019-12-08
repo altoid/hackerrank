@@ -110,14 +110,23 @@ def char_in_expansion_helper(stree, node, pos, acc):
         pos -= pel
 
 
+pos = 200
+
+
 def naive_expansion_helper(stree, node, arc, acc):
+    global pos
+    
     label = stree.get_arc_label(arc)
     next_node = node.children[arc]
     if next_node.is_leaf():
         label = label[:-1]
 
     for i in xrange(len(label)):
-        print acc + label[:i + 1]
+        substring = acc + label[:i + 1]
+        if 0 <= pos < len(substring):
+            print '########### %s ##########' % substring[pos]
+        print substring
+        pos -= len(substring)
 
     keys = sorted(next_node.children.keys(), key=lambda x: stree.text[x[0]])
     for arc in keys:
