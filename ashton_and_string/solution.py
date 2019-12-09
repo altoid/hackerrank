@@ -6,16 +6,6 @@ import unittest
 
 from pprint import pprint
 
-MAX_LEN = 101
-triangle_numbers = [0] * MAX_LEN
-
-
-def initialize():
-    global triangle_numbers
-    triangle_numbers[0] = 0
-    for i in xrange(1, MAX_LEN):
-        triangle_numbers[i] = i + triangle_numbers[i - 1]
-
 
 def prefix_expansion_length(stree, node, arc, acc):
     """
@@ -134,14 +124,11 @@ class MyTest(unittest.TestCase):
     def test_find_char_in_expansion(self):
         t = SuffixTree("mississippi")
         t.build_tree()
-        naive_expansion(t, 262)
+        naive_expansion(t, 201)
         #print e
 
 
 if __name__ == '__main__':
-    initialize()
-    pprint(triangle_numbers)
-
     t = SuffixTree('mississippi')
     t.build_tree()
     t.show()
