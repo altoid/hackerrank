@@ -66,7 +66,8 @@ def solve(arr):
     if len(arr) < 3:
         return 0
 
-    return 0
+    sol = Solution(arr)
+    return sol.maxproduct
 
 
 class MyTest(unittest.TestCase):
