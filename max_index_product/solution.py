@@ -3,6 +3,7 @@
 import fileinput
 import unittest
 
+# TODO:  add 1 to each element in left, right when lefts, rights, are finished.
 
 class Solution(object):
     def __init__(self, arr):
@@ -35,7 +36,7 @@ class Solution(object):
             # self.arr[i] > self.arr[right]
             interval[0] = i
             for j in xrange(interval[1], interval[0], -1):
-                self.left[j] = interval[0]
+                self.left[j] = interval[0] + 1
     
     def rights(self):
         """
@@ -58,7 +59,7 @@ class Solution(object):
             # self.arr[i] > self.arr[left]
             interval[1] = i
             for j in xrange(interval[0], interval[1]):
-                self.right[j] = interval[1]
+                self.right[j] = interval[1] + 1
 
 
 def solve(arr):
@@ -85,27 +86,27 @@ class MyTest(unittest.TestCase):
         # trivial cases
         arr = [1, 2]
         sol = Solution(arr)
-        self.assertEqual([1, 0], sol.right)
+        self.assertEqual([2, 0], sol.right)
 
     def test_right_1(self):
         arr = [5, 4, 3, 2, 1, 6]
         sol = Solution(arr)
-        self.assertEqual([5, 5, 5, 5, 5, 0], sol.right)
+        self.assertEqual([6, 6, 6, 6, 6, 0], sol.right)
 
     def test_right_2(self):
         arr = [1, 2, 3, 4, 5, 6]
         sol = Solution(arr)
-        self.assertEqual([1, 2, 3, 4, 5, 0], sol.right)
+        self.assertEqual([2, 3, 4, 5, 6, 0], sol.right)
 
     def test_right_3(self):
         arr = [1, 1, 1, 1, 1, 6]
         sol = Solution(arr)
-        self.assertEqual([5, 5, 5, 5, 5, 0], sol.right)
+        self.assertEqual([6, 6, 6, 6, 6, 0], sol.right)
 
     def test_right_4(self):
         arr = [1, 2, 1, 3, 1, 4, 1, 5]
         sol = Solution(arr)
-        self.assertEqual([1, 3, 3, 5, 5, 7, 7, 0], sol.right)
+        self.assertEqual([2, 4, 4, 6, 6, 8, 8, 0], sol.right)
 
     ####
     
@@ -130,20 +131,20 @@ class MyTest(unittest.TestCase):
     def test_left_1(self):
         arr = [6, 1, 2, 3, 4, 5]
         sol = Solution(arr)
-        self.assertEqual([0, 0, 0, 0, 0, 0], sol.left)
+        self.assertEqual([0, 1, 1, 1, 1, 1], sol.left)
 
     def test_left_2(self):
         arr = [5, 6, 4, 3, 2, 1]
         sol = Solution(arr)
-        self.assertEqual([0, 0, 1, 2, 3, 4], sol.left)
+        self.assertEqual([0, 0, 2, 3, 4, 5], sol.left)
 
     def test_left_3(self):
         arr = [1, 6, 1, 1, 1, 1]
         sol = Solution(arr)
-        self.assertEqual([0, 0, 1, 1, 1, 1], sol.left)
+        self.assertEqual([0, 0, 2, 2, 2, 2], sol.left)
 
     def test_left_4(self):
         arr = [5, 1, 4, 1, 3, 1, 2, 1]
         sol = Solution(arr)
-        self.assertEqual([0, 0, 0, 2, 2, 4, 4, 6], sol.left)
+        self.assertEqual([0, 1, 1, 3, 3, 5, 5, 7], sol.left)
 
