@@ -26,13 +26,11 @@ class Solution(object):
         lstack = [len(self.arr)]
         i = len(self.arr) - 1
         while i >= 0:
-            if self.arr[i] <= self.arr[lstack[-1] - 1]:
-                lstack.append(i + 1)
-            else:
+            if self.arr[i] > self.arr[lstack[-1] - 1]:
                 while lstack and self.arr[i] > self.arr[lstack[-1] - 1]:
                     x = lstack.pop()
                     self.left[x - 1] = i + 1
-                lstack.append(i + 1)
+            lstack.append(i + 1)
             i -= 1
 
     def rights(self):
@@ -52,13 +50,11 @@ class Solution(object):
         rstack = [1]
         i = 1
         while i < len(self.arr):
-            if self.arr[i] <= self.arr[rstack[-1] - 1]:
-                rstack.append(i + 1)
-            else:
+            if self.arr[i] > self.arr[rstack[-1] - 1]:
                 while rstack and self.arr[i] > self.arr[rstack[-1] - 1]:
                     x = rstack.pop()
                     self.right[x - 1] = i + 1
-                rstack.append(i + 1)
+            rstack.append(i + 1)
             i += 1
 
 
