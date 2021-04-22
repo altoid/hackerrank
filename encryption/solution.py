@@ -27,5 +27,15 @@ class MyTest(unittest.TestCase):
         s = 'if man was meant to stay on the ground god would have given us roots'
         e = 'imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau'
 
-        test = encrypt(s)
-        self.assertEqual(e, test)
+        self.assertEqual(e, encrypt(s))
+
+    def test2(self):
+        s = 'feed the dog'
+        e = 'fto ehg ee dd'
+        self.assertEqual(e, encrypt(s))
+
+    def test3(self):
+        s = 'have a nice day'
+        e = 'hae and via ecy'
+        self.assertEqual(e, encrypt(s))
+
