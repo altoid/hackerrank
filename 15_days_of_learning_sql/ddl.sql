@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS `submissions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `submissions` (
   `submission_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `sumsission_id` int(11) NOT NULL,
+  `submission_id` int(11) NOT NULL,
   `hacker_id` int(11) NOT NULL,
   `score` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
