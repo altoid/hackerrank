@@ -10,13 +10,7 @@ def encrypt(s):
     ss = s.replace(' ', '')
 
     sqrt = math.sqrt(len(ss))
-    r = int(math.floor(sqrt))
     c = int(math.ceil(sqrt))
-
-    print ss, r, c
-
-    for i in xrange(c):
-        print ss[i::c]
 
     trans = [ss[x::c] for x in xrange(c)]
     return ' '.join(trans)
