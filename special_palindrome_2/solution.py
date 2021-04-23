@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import fileinput
+from pprint import pprint
 
 
 def rfunc(accum_value, c):
@@ -27,7 +28,7 @@ def substrCount(unused, str):
     # traverse the result.
     # if any char count is > 1, add n(n + 1)/2 to result
     # if any char count is 1, check preceding and following char.  if they are the same, add 1.
-    # print charcounts
+    pprint(charcounts)
 
     result = 0
     n = charcounts[0][1]

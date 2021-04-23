@@ -8,7 +8,7 @@ LIMIT = 10
 
 def minimumSwaps(arr):
     # print arr
-    checks = [x for x in [0] * len(arr)]
+    checks = [0] * len(arr)
     # print checks
     total_swaps = 0
 
