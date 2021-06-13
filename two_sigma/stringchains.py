@@ -43,3 +43,7 @@ class MyTest(unittest.TestCase):
     def test1(self):
         arr = ['a', 'b', 'ba', 'bca', 'bda', 'bdca']
         self.assertEqual(4, longestChain(arr))
+
+    def test2(self):
+        arr = ['i','as', 'sa', 'hi', 'sash','ssahi','sashi', 'ashi','shi']
+        self.assertEqual(5, longestChain(arr))
