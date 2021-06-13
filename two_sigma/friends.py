@@ -82,3 +82,8 @@ class MyTest(unittest.TestCase):
         arr = [['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N']]
 
         self.assertEqual(0, friendCircles(arr))
+
+    def test6(self):
+        arr = [['Y', 'Y', 'Y', 'Y'], ['Y', 'Y', 'Y', 'Y'], ['Y', 'Y', 'Y', 'Y'], ['Y', 'Y', 'Y', 'Y']]
+
+        self.assertEqual(1, friendCircles(arr))
