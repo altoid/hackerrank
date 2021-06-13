@@ -18,23 +18,23 @@ def friendCircles(friends):
     for i in xrange(nfriends):
         if friends[i][i] == 'Y':
             circles += 1
-            wash(i, friends)
+            traverse(i, friends)
 
     return circles
 
 
-def wash(i, friends):
+def traverse(i, friends):
     nfriends = len(friends)
     if friends[i][i] == 'Y':
         friends[i][i] = '-'
     for j in xrange(i + 1, nfriends):
         if friends[i][j] == 'Y':
             friends[i][j] = '-'
-            wash(j, friends)
+            traverse(j, friends)
             for k in xrange(i, j + 1):
                 if friends[k][j] == 'Y':
                     friends[k][j] = '-'
-                    wash(k, friends)
+                    traverse(k, friends)
 
 
 if __name__ == '__main__':
@@ -48,9 +48,11 @@ if __name__ == '__main__':
         if fi.isfirstline():
             continue
 
-        arr.append(list(line))
+        arr.append(line)
 
     print arr
+    result = map(list, arr)
+    print result
 
 
 class MyTest(unittest.TestCase):
@@ -65,3 +67,18 @@ class MyTest(unittest.TestCase):
         arr = [['Y', 'N', 'Y', 'N'], ['N', 'Y', 'Y', 'N'], ['Y', 'Y', 'N', 'N'], ['N', 'N', 'N', 'Y']]
 
         self.assertEqual(2, friendCircles(arr))
+
+    def test3(self):
+        arr = [['Y', 'N', 'Y', 'N'], ['N', 'Y', 'N', 'Y'], ['Y', 'N', 'Y', 'N'], ['N', 'Y', 'N', 'Y']]
+
+        self.assertEqual(2, friendCircles(arr))
+
+    def test4(self):
+        arr = [['Y', 'N', 'N', 'N'], ['N', 'Y', 'N', 'N'], ['N', 'N', 'Y', 'N'], ['N', 'N', 'N', 'Y']]
+
+        self.assertEqual(4, friendCircles(arr))
+
+    def test5(self):
+        arr = [['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N'], ['N', 'N', 'N', 'N']]
+
+        self.assertEqual(0, friendCircles(arr))
