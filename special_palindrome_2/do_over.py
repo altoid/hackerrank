@@ -1,8 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # https://www.hackerrank.com/challenges/special-palindrome-again/problem?h_r=internal-search
 
 import unittest
+from functools import reduce
 
 
 def reducer(encoding, s_right):
@@ -37,7 +38,7 @@ def run_length_encode(s):
     return reduce(reducer, s, [])
 
 
-def substrCount(ignore_me, s):
+def substrCount(s):
     e = run_length_encode(s)
     result = 0
 
@@ -52,8 +53,8 @@ def substrCount(ignore_me, s):
     n = e[-1][1]
     result += n * (n + 1) / 2
 
-    for i in xrange(1, len(e) - 1):
-        print e[i]
+    for i in range(1, len(e) - 1):
+        print(e[i])
         n = e[i][1]
         result += n * (n + 1) / 2
         if n == 1 and e[i - 1][0] == e[i + 1][0]:
@@ -79,7 +80,7 @@ class MyTest(unittest.TestCase):
 
 
 def test(s):
-    print s, run_length_encode(s)
+    print(s, run_length_encode(s))
 
 
 if __name__ == '__main__':
