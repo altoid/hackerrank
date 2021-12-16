@@ -5,6 +5,13 @@
 import unittest
 from functools import reduce
 
+# encoding '' should yield []
+# encoding None should yield None
+# decoding None should yield None
+# decoding [] should yield ''
+#
+# None and '' must be handled differently because
+# encode-decode-encode must always produce the original value.
 
 def reducer(encoding, s_right):
     """
@@ -92,6 +99,16 @@ class MyTest(unittest.TestCase):
     def test4(self):
         self.assertEqual(0, substrCount(''))
 
+    def test_encode_1(self):
+        test_string = ''
+        encoding = run_length_encode(test_string)
+        self.assertEqual([], encoding)
+        
+    def test_encode_2(self):
+        test_string = None
+        encoding = run_length_encode(test_string)
+        self.assertIsNone(encoding)
+        
     def test_decode_1(self):
         test_string = 'aaabaacaa'
         encoding = run_length_encode(test_string)
@@ -107,7 +124,6 @@ class MyTest(unittest.TestCase):
     def test_decode_3(self):
         test_string = None
         encoding = run_length_encode(test_string)
-        self.assertIsNone(encoding)
         decoding = decode(encoding)
         self.assertIsNone(decoding)
 
