@@ -38,6 +38,19 @@ def run_length_encode(s):
     return reduce(reducer, s, [])
 
 
+def decode_reduce(acc, encoding_right):
+    if not encoding_right:
+        return acc
+
+    run = encoding_right[0] * encoding_right[1]
+    return acc + run
+
+
+# not needed but fun to do
+def decode(encoding):
+    return reduce(decode_reduce, encoding, '')
+
+    
 def substrCount(s):
     e = run_length_encode(s)
     result = 0
@@ -78,6 +91,11 @@ class MyTest(unittest.TestCase):
     def test4(self):
         self.assertEqual(0, substrCount(''))
 
+    def test_decode_1(self):
+        test_string = 'aaabaacaa'
+        encoding = run_length_encode(test_string)
+        decoding = decode(encoding)
+        self.assertEqual(test_string, decoding)
 
 def test(s):
     print(s, run_length_encode(s))
