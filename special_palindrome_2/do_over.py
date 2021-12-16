@@ -35,7 +35,8 @@ def run_length_encode(s):
     :param s:
     :return:
     """
-    return reduce(reducer, s, [])
+    if s is not None:
+        return reduce(reducer, s, [])
 
 
 def decode_reduce(acc, encoding_right):
@@ -48,7 +49,8 @@ def decode_reduce(acc, encoding_right):
 
 # not needed but fun to do
 def decode(encoding):
-    return reduce(decode_reduce, encoding, '')
+    if encoding is not None:
+        return reduce(decode_reduce, encoding, '')
 
     
 def substrCount(s):
@@ -67,7 +69,6 @@ def substrCount(s):
     result += n * (n + 1) / 2
 
     for i in range(1, len(e) - 1):
-        print(e[i])
         n = e[i][1]
         result += n * (n + 1) / 2
         if n == 1 and e[i - 1][0] == e[i + 1][0]:
@@ -96,6 +97,19 @@ class MyTest(unittest.TestCase):
         encoding = run_length_encode(test_string)
         decoding = decode(encoding)
         self.assertEqual(test_string, decoding)
+
+    def test_decode_2(self):
+        test_string = ''
+        encoding = run_length_encode(test_string)
+        decoding = decode(encoding)
+        self.assertEqual(test_string, decoding)
+
+    def test_decode_3(self):
+        test_string = None
+        encoding = run_length_encode(test_string)
+        self.assertIsNone(encoding)
+        decoding = decode(encoding)
+        self.assertIsNone(decoding)
 
 def test(s):
     print(s, run_length_encode(s))
