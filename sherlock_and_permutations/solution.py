@@ -19,6 +19,7 @@ def factorial(n):
     return factorial_cache[n]
 
 
+# doing this without factorials caused recursion to go too deep.
 def binary_coefficient(n, k):
     assert 0 <= k <= n
 
