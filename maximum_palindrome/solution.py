@@ -27,6 +27,7 @@
 import unittest
 from pprint import pprint, pformat
 import math
+from functools import reduce
 
 # compute a 2d array of character counts.  arr[c][i] is the number of times character c appears in the substring
 # that ends at index i, using 1-based indexing
@@ -57,7 +58,7 @@ def initialize(s):
     global factorials
 
     factorials[0] = 1
-    for i in xrange(1, 50000):
+    for i in range(1, 50000):
         factorials[i] = i * factorials[i - 1]
 
     global lettercounts
@@ -83,11 +84,11 @@ def initialize(s):
         counter = 1
         l = 0
         while l < len(indices) - 1:
-            for j in xrange(indices[l], indices[l + 1]):
+            for j in range(indices[l], indices[l + 1]):
                 local_lettercounts[k][j] = counter
             counter += 1
             l += 1
-        for j in xrange(indices[l], len(s) + 1):
+        for j in range(indices[l], len(s) + 1):
             local_lettercounts[k][j] = counter
 
     lettercounts = local_lettercounts
@@ -125,7 +126,7 @@ def combinations(numerator, denominator):
 
     t = tuple(sorted(denominator))
     if t not in combos:
-        temp_arr = map(lambda x: inverse(factorial(x)), t)
+        temp_arr = [inverse(factorial(x)) for x in t]
         result = reduce(lambda x, y: x * y % MODULUS, temp_arr)
         result = factorial(numerator) * result
         result %= MODULUS
@@ -144,9 +145,9 @@ def answerQuery(l, r):
     for k in alphabet:
         lettercounts_range[k] = range_lettercount(k, l, r)
 
-    items = lettercounts_range.items()
-    even_letters = filter(lambda x: x[1] % 2 == 0 and x[1] > 0, items)
-    odd_letters = filter(lambda x: x[1] % 2 == 1, items)
+    items = list(lettercounts_range.items())
+    even_letters = [x for x in items if x[1] % 2 == 0 and x[1] > 0]
+    odd_letters = [x for x in items if x[1] % 2 == 1]
 
     denominator = [x[1] / 2 for x in even_letters] + [x[1] / 2 for x in odd_letters]
     numerator = sum(denominator)
@@ -173,17 +174,17 @@ if __name__ == '__main__':
         counter = 0
         for line in handle:
             bounds = line.strip().split(' ')
-            bounds = map(int, bounds)
+            bounds = list(map(int, bounds))
             #print "[%s, %s]" % (bounds[0], bounds[1])
             answer = answerQuery(bounds[0], bounds[1])
             if answer != answers[counter]:
-                print "mismatch:  got %s, expected %s, bounds [%s, %s]" % (
+                print("mismatch:  got %s, expected %s, bounds [%s, %s]" % (
                     answer, answers[counter], bounds[0], bounds[1]
-                )
-                print "text = |%s|" % text[(bounds[0] - 1):bounds[1]]
+                ))
+                print("text = |%s|" % text[(bounds[0] - 1):bounds[1]])
             counter += 1
 
-    print "done"
+    print("done")
 
 
 class MyTest(unittest.TestCase):
@@ -243,7 +244,7 @@ class MyTest(unittest.TestCase):
         numerator = 100000
         denominator = [3846] * 25 + [3850]
         result = combinations(numerator, denominator)
-        print result
+        print(result)
 
 
     def test_1(self):
