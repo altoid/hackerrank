@@ -73,49 +73,49 @@ class SumTest(unittest.TestCase):
     def test_file(self):
         with open('input00.txt') as f:
             f.readline()  # throw it away
-            arr = map(int, f.readline().strip().split(' '))
+            arr = list(map(int, f.readline().strip().split(' ')))
         self.assertEqual(151598486, solution(arr))
 
 class SubsetTest(unittest.TestCase):
 
     def test1(self):
-        print
+        print()
         arr = [1]
         for s in subsets(arr):
-            print s
+            print(s)
 
     def test2(self):
-        print
+        print()
         arr = [1,2]
         for s in subsets(arr):
-            print s
+            print(s)
 
     def test3(self):
-        print
+        print()
         arr = [1,2, 3]
         for s in subsets(arr):
-            print s
+            print(s)
 
     def test4(self):
-        print
+        print()
         arr = [1,2, 3, 4]
         for s in subsets(arr):
-            print s
+            print(s)
 
     def test5(self):
-        print
+        print()
         arr = [1,2, 3, 4, 5]
         for s in subsets(arr):
-            print s
+            print(s)
 
     def test6(self):
-        print
+        print()
         arr = [1,2, 3, 4, 5, 6]
         for s in subsets(arr):
-            print s
+            print(s)
 
     def test7(self):
-        print
+        print()
         arr = [1,2, 3, 4, 5, 6, 7]
         for s in subsets(arr):
-            print s
+            print(s)
